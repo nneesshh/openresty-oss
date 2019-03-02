@@ -1,0 +1,188 @@
+﻿<%
+    local date = require("date")
+    local now = date(false);
+
+    local createBy
+    if session.user then
+        createBy = session.user.Name
+    end
+
+    local userId
+    if params then
+        userId = params.UserId
+    end
+    
+    local labelList = {
+        'ID',
+        '用户名',
+        '昵称',
+        '充值类型',
+        '充值金额(元)',
+        '充值状态',
+        '充值时间',
+        '商品id',        
+    }
+
+    local fieldList = {
+        'ticketid',
+        'userid',
+        'nick',
+        'charge_type',
+        'charge_cash',
+        'charge_state',
+        'charge_time',        
+        'goodsid',
+        
+    }
+%>
+
+<script type="text/javascript">
+    function _do_ajax_submit_query_charge_PlayerManageForm() {
+        
+        $("#successInfo").empty();
+
+        var l = fp.selectedDates;
+        if (l.length >= 2) {
+            var beginDate = $("<input type='hidden' name='BeginDate' value='" + flatpickr.formatDate(l[0], "Y-m-d") + "'/>")
+            var endDate = $("<input type='hidden' name='EndDate' value='" + flatpickr.formatDate(l[1], "Y-m-d") + "'/>")
+            $('#playerManageForm').append(beginDate);
+            $('#playerManageForm').append(endDate);
+        }
+
+        var option = {
+            url : '/PlayerManage/QueryCharge',
+            type : 'POST',
+            dataType: 'html',
+            //headers: { "ClientCallMode" : "ajax" }, //添加请求头部
+            success: function(data) {
+                $("#_ajax_call_result").html(data);
+            },
+            error: function(xmlhr, textStatus, errorThrown) {
+                alert("failed!!! xmlhr.status=" + xmlhr.status + 
+                        ", xmlhr.readyState=" + xmlhr.readyState + 
+                        ", textStatus=" + textStatus + 
+                        ", errorThrown=" + errorThrown);
+            },
+        };
+        $("#playerManageForm").ajaxSubmit(option);
+        return false; //最好返回false，因为如果按钮类型是submit,则表单自己又会提交一次;返回false阻止表单再次提交
+    };
+
+</script>
+
+<!-- render body -->
+<div class="row">
+
+    <div class="center-block" style="width:600px;margin:0 auto">
+        <% if errors then %>
+        <div class="form-group">
+            <div class="text-danger"><%= errors[1] %></div>
+        </div>
+        <% end %>
+
+        <% if success_infos then %>
+        <div class="form-group">
+            <div id="successInfo" class="text-success"><%= success_infos[1] %></div>
+        </div>
+        <% end %>
+    </div>
+
+    <div class="clearfix" style="margin-bottom: 10px;"></div><!-- 清除浮动 -->
+
+    <!-- query button -->
+    <div class="col-sm-12">
+        <form class="form-horizontal" role="form" id="playerManageForm">
+            <div class="form-group">
+                <label class="col-sm-2 control-label" style="width:200px;">输入玩家账号名称:</label>
+                <div class="col-sm-4">
+                    <input style="width:230px;" type="text" id="userId" name="UserId" value="<%= userId or '' %>" />
+                </div>
+                <div class="col-sm-2 ">
+                    <a class="btn btn-primary" style="width:100px;" href="javascript:void(0)" onclick="_do_ajax_submit_query_charge_PlayerManageForm()">查询</a>
+                </div>
+            </div>
+
+            <div class="clearfix" style="margin-bottom: 10px;"></div><!-- 清除浮动 -->
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" style="width:200px;">选择时间范围:</label>
+                <div class="col-sm-4">
+                    <input style="width:230px;" type="text" id="queryRangeTime" name="QueryRangeTime" />
+                </div>
+            </div>
+        </form>
+    </div> 
+
+    <div class="clearfix" style="margin-bottom: 10px;"></div><!-- 清除浮动 -->
+
+    <!-- menu name -->
+    <div class="col-sm-12">
+        <h1> 玩家充值信息 </h1>
+    </div>
+
+    <!-- data table -->
+    <div class="col-xs-10">
+        <div class="box box-primary">
+            <table class="table table-bordered table-hover dataTable" role="grid">
+                <thead>
+                    <tr role="row">
+                        <% for i, v in ipairs(labelList) do %>
+                        <th>
+                            <%= v %>
+                        </th>
+                        <% end %>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%
+                        if PlayerData then
+                            for i, v in ipairs(PlayerData) do
+                    %>
+                    <tr>
+                            <% for i2, v2 in ipairs(fieldList) do %>
+                        <td>
+                            <%= v[v2] %>
+                        </td>
+                            <% end %>
+                    </tr>
+                    <%
+                            end
+                        end
+                    %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+<!-- /.row -->
+
+<div>
+    <a class="btn-lg" href="javascript:void(0)" onclick="_do_ajax_call_GamePlayer()">返回</a>
+</div>
+
+<script type="text/javascript">
+
+    var fp
+
+    $(function(){
+    
+        var initTimeText = ""
+
+        fp = document.getElementById("queryRangeTime").flatpickr({
+            mode: "range",
+            maxDate: "today",
+            dateFormat: "Y-m-d",
+            //defaultDate: ["2018-10-10", "2016-10-20"],
+            locale: "zh",
+	        enable: [
+		        {
+			        from: new Date().fp_incr(-1000),
+			        to: "today",
+		        }
+	        ],
+        });
+    });
+
+</script>

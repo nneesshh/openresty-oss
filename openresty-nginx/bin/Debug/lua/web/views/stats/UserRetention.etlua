@@ -1,0 +1,521 @@
+﻿<%
+    local date = require("date")
+    local now = date(false);
+
+    local createBy
+    if session.user then
+        createBy = session.user.Name
+    end
+
+    local queryTime
+    if params then
+        queryTime = params.QueryTime
+    end
+    
+    local labelList = {
+        '日期',
+        '账号总数',
+        '在线账号',
+        '新增账号',
+        '次日留存数',
+        '次日留存率',
+        '次日留存数（新增）',
+        '次日留存率（新增）',
+        '3日留存数',
+        '3日留存率',
+        '3日留存数（新增）',
+        '3日留存率（新增）',
+        '7日留存数',
+        '7日留存率',
+        '7日留存数（新增）',
+        '7日留存率（新增）',
+        '30日留存数',
+        '30日留存率',
+        '30日留存数（新增）',
+        '30日留存率（新增）',
+    }
+
+    local fieldList = {
+        'day',
+        'accumulate_user',
+        'online_users',
+        'new_user',
+        'retention_1',
+        'retention_rate_1',
+        'new_user_retention_1',
+        'new_user_retention_rate_1',
+        'retention_3',
+        'retention_rate_3',
+        'new_user_retention_3',
+        'new_user_retention_rate_3',
+        'retention_7',
+        'retention_rate_7',
+        'new_user_retention_7',
+        'new_user_retention_rate_7',
+        'retention_30',
+        'retention_rate_30',
+        'new_user_retention_30',
+        'new_user_retention_rate_30',
+    }
+
+    for i, v in ipairs(StatsPage) do
+        if v.online_users > 0 then
+            v['retention_rate_1'] = string.format("%.2f", v.retention_1 / v.online_users)
+            v['retention_rate_3'] = string.format("%.2f", v.retention_3 / v.online_users)
+            v['retention_rate_7'] = string.format("%.2f", v.retention_7 / v.online_users)
+            v['retention_rate_30'] = string.format("%.2f", v.retention_30 / v.online_users)
+        else
+            v['retention_rate_1'] = "0.0"
+            v['retention_rate_3'] = "0.0"
+            v['retention_rate_7'] = "0.0"
+            v['retention_rate_30'] = "0.0"
+        end
+
+        if v.new_user > 0 then
+            v['new_user_retention_rate_1'] = string.format("%.2f", v.new_user_retention_1 / v.new_user)
+            v['new_user_retention_rate_3'] = string.format("%.2f", v.new_user_retention_3 / v.new_user)
+            v['new_user_retention_rate_7'] = string.format("%.2f", v.new_user_retention_7 / v.new_user)
+            v['new_user_retention_rate_30'] = string.format("%.2f", v.new_user_retention_30 / v.new_user)
+        else
+            v['new_user_retention_rate_1'] = "0.0"
+            v['new_user_retention_rate_3'] = "0.0"
+            v['new_user_retention_rate_7'] = "0.0"
+            v['new_user_retention_rate_30'] = "0.0"
+        end
+    end
+%>
+
+<script type="text/javascript">
+    function _do_ajax_submit_UserRetentionQueryForm() {
+        
+        $("#successInfo").empty();
+
+        var option = {
+            url : '/StatsUserRetention',
+            type : 'POST',
+            dataType: 'html',
+            //headers: { "ClientCallMode" : "ajax" }, //添加请求头部
+            success: function(data) {
+                $("#_ajax_call_result").html(data);
+            },
+            error: function(xmlhr, textStatus, errorThrown) {
+                alert("failed!!! xmlhr.status=" + xmlhr.status + 
+                        ", xmlhr.readyState=" + xmlhr.readyState + 
+                        ", textStatus=" + textStatus + 
+                        ", errorThrown=" + errorThrown);
+            },
+        };
+        $("#userRetentionQueryForm").ajaxSubmit(option);
+        return false; //最好返回false，因为如果按钮类型是submit,则表单自己又会提交一次;返回false阻止表单再次提交
+    };
+</script>
+
+<!-- render body -->
+<div class="row">
+
+    <div class="center-block" style="width:600px;margin:0 auto">
+        <% if errors then %>
+        <div class="form-group">
+            <div class="text-danger"><%= errors[1] %></div>
+        </div>
+        <% end %>
+
+        <% if success_infos then %>
+        <div class="form-group">
+            <div id="successInfo" class="text-success"><%= success_infos[1] %></div>
+        </div>
+        <% end %>
+    </div>
+
+    <div class="clearfix" style="margin-bottom: 10px;"></div><!-- 清除浮动 -->
+
+    <!-- query button -->
+    <div class="col-sm-12">
+        <form class="form-horizontal" role="form" id="userRetentionQueryForm">
+            <div class="form-group">
+                <label class="col-sm-2 control-label" style="width:120px;">输入查询时间:</label>
+                <div class="col-sm-2 ">
+                    <input style="width:100px;" type="text" id="query_time" name="QueryTime" />
+                </div>
+                <div class="col-sm-2 ">
+                    <a class="btn btn-primary" style="width:100px;" href="javascript:void(0)" onclick="_do_ajax_submit_UserRetentionQueryForm()">查询</a>
+                </div>
+            </div>
+        </form>
+    </div> 
+
+    <div class="clearfix" style="margin-bottom: 10px;"></div><!-- 清除浮动 -->
+
+    <!-- menu name -->
+    <div class="col-sm-12">
+        <h1> 留存率统计 </h1>
+        <h1> 总数: <%= StatsPage and #StatsPage or 0 %>  </h1>
+    </div>
+
+    <!-- data table -->
+    <div class="col-xs-10">
+        <div class="box box-primary">
+            <table class="table table-bordered table-hover dataTable" role="grid">
+                <thead>
+                    <tr role="row">
+                        <% for i, v in ipairs(labelList) do %>
+                        <th>
+                            <%= v %>
+                        </th>
+                        <% end %>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%
+                        if StatsPage then
+                            for i, v in ipairs(StatsPage) do
+                    %>
+                    <tr>
+                            <% for i2, v2 in ipairs(fieldList) do %>
+                        <td>
+                            <%= v[v2] %>
+                        </td>
+                            <% end %>
+                    </tr>
+                    <%
+                            end
+                        end
+                    %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-xs-10">
+        <!-- LINE CHART -->
+        <div class="box box-success">
+            <div class="box-header with-border">
+                <h3 class="box-title">活跃用户留存率统计图</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="chart">
+                    <canvas id="lineChart3" style="height:250px;width:334px;" width="668" height="500"></canvas>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+        <!-- LINE CHART -->
+        <div class="box box-success">
+            <div class="box-header with-border">
+                <h3 class="box-title">新增用户留存率统计图</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="chart">
+                    <canvas id="lineChart4" style="height:250px;width:334px;" width="668" height="500"></canvas>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+        <!-- LINE CHART -->
+        <div class="box box-success">
+            <div class="box-header with-border">
+                <h3 class="box-title">活跃用户留存数统计图</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="chart">
+                    <canvas id="lineChart" style="height:250px;width:334px;" width="668" height="500"></canvas>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+        <!-- LINE CHART -->
+        <div class="box box-success">
+            <div class="box-header with-border">
+                <h3 class="box-title">新增用户留存数统计图</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="chart">
+                    <canvas id="lineChart2" style="height:250px;width:334px;" width="668" height="500"></canvas>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col (RIGHT) -->
+</div>
+<!-- /.row -->
+
+<script type="text/javascript">
+
+    $(function(){
+    
+        var initTimeText = "<%= queryTime or now:fmt('%F') %>"
+
+        var fp = document.getElementById("query_time").flatpickr({
+            minDate: new Date().fp_incr(-360),
+	        enableTime: false,
+            enableSeconds: false,
+            defaultDate: initTimeText,
+            minuteIncrement: 1,
+            locale: "zh",
+	        enable: [
+		        {
+			        from: new Date().fp_incr(-360),
+			        to: new Date().fp_incr(30),
+		        }
+	        ],
+        });
+
+        var dataList = []
+        for (var index = 0; index < <%=#fieldList%>; index++)
+        {
+            dataList[index] = []
+        }
+
+        <% 
+            if StatsPage then
+                for i, v in ipairs(StatsPage) do 
+                    for i2, v2 in ipairs(fieldList) do
+        %>
+                        dataList[<%=i2%>-1][<%=i%>-1] = "<%=v[v2]%>"
+        <%  
+                    end
+                end 
+            end 
+        %>
+
+        datasetList1 = [];
+        chart_utils_addDataset(datasetList1, "<%=labelList[3]%>", dataList[2]);
+        chart_utils_addDataset(datasetList1, "<%=labelList[5]%>", dataList[4]);
+        chart_utils_addDataset(datasetList1, "<%=labelList[9]%>", dataList[8]);
+        chart_utils_addDataset(datasetList1, "<%=labelList[13]%>", dataList[12]);
+        chart_utils_addDataset(datasetList1, "<%=labelList[17]%>", dataList[16]);
+
+        var config_1 = {
+			type: 'line',
+			data: {
+                labels  : dataList[0],
+                datasets: datasetList1,
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: '', //'Chart.js Line Chart'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: '日期'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: ''
+                        }
+                    }]
+                }
+            }
+        };
+
+        // Create the lineChart_1
+        var ctx_1 = document.getElementById("lineChart").getContext('2d')
+        var line_1 = new Chart(ctx_1, config_1)
+        // line_1.update();
+
+        datasetList2 = [];
+        chart_utils_addDataset(datasetList2, "<%=labelList[4]%>", dataList[3]);
+        chart_utils_addDataset(datasetList2, "<%=labelList[7]%>", dataList[6]);
+        chart_utils_addDataset(datasetList2, "<%=labelList[11]%>", dataList[10]);
+        chart_utils_addDataset(datasetList2, "<%=labelList[15]%>", dataList[14]);
+        chart_utils_addDataset(datasetList2, "<%=labelList[19]%>", dataList[18]);
+
+        var config_2 = {
+			type: 'line',
+			data: {
+                labels  : dataList[0],
+                datasets: datasetList2,
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: '', //'Chart.js Line Chart'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: '日期'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: ''
+                        }
+                    }]
+                }
+            }
+        };
+
+        // Create the lineChart_2
+        var ctx_2 = document.getElementById("lineChart2").getContext('2d')
+        var line_2 = new Chart(ctx_2, config_2)
+        // line_2.update();
+
+        datasetList3 = [];
+        chart_utils_addDataset(datasetList3, "<%=labelList[6]%>", dataList[5]);
+        chart_utils_addDataset(datasetList3, "<%=labelList[10]%>", dataList[9]);
+        chart_utils_addDataset(datasetList3, "<%=labelList[14]%>", dataList[13]);
+        chart_utils_addDataset(datasetList3, "<%=labelList[18]%>", dataList[17]);
+
+        var config_3 = {
+			type: 'line',
+			data: {
+                labels  : dataList[0],
+                datasets: datasetList3,
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: '', //'Chart.js Line Chart'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: '日期'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: ''
+                        }
+                    }]
+                }
+            }
+        };
+
+        // Create the lineChart_3
+        var ctx_3 = document.getElementById("lineChart3").getContext('2d')
+        var line_3 = new Chart(ctx_3, config_3)
+        // line_3.update();
+
+        datasetList4 = [];
+        chart_utils_addDataset(datasetList4, "<%=labelList[8]%>", dataList[7]);
+        chart_utils_addDataset(datasetList4, "<%=labelList[12]%>", dataList[11]);
+        chart_utils_addDataset(datasetList4, "<%=labelList[16]%>", dataList[15]);
+        chart_utils_addDataset(datasetList4, "<%=labelList[20]%>", dataList[19]);
+
+        var config_4 = {
+			type: 'line',
+			data: {
+                labels  : dataList[0],
+                datasets: datasetList4,
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: '', //'Chart.js Line Chart'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: '日期'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: ''
+                        }
+                    }]
+                }
+            }
+        };
+
+        // Create the lineChart_4
+        var ctx_4 = document.getElementById("lineChart4").getContext('2d')
+        var line_4 = new Chart(ctx_4, config_4)
+        // line_4.update();
+
+    })
+</script>

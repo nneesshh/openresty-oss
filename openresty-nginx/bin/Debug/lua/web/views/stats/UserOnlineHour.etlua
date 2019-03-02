@@ -1,0 +1,181 @@
+﻿<%
+    local createBy
+    if session.user then
+        createBy = session.user.Name
+    end
+
+    local labelList = {
+        '日期',
+        '0时',
+        '2时',
+        '6时',
+        '8时',
+        '9时',
+        '10时',
+        '13时',
+        '19时',
+        '21时',
+        '23时',
+    }
+
+    local fieldList = {
+        'day',
+        'h_00',
+        'h_02',
+        'h_06',
+        'h_08',
+        'h_09',
+        'h_10',
+        'h_13',
+        'h_19',
+        'h_21',
+        'h_23',
+    }
+%>
+
+<!-- render body -->
+<div class="row">
+    <!-- menu name -->
+    <div class="col-xs-10">
+        <h1> 小时在线 </h1>
+    </div>
+    <!-- data table -->
+    <div class="col-xs-10">
+        <div class="box box-primary">
+            <table class="table table-bordered table-hover dataTable" role="grid">
+                <thead>
+                    <tr role="row">
+                        <% for i, v in ipairs(labelList) do %>
+                        <th>
+                            <%= v %>
+                        </th>
+                        <% end %>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%
+                        if StatsPage then
+                            for i, v in ipairs(StatsPage) do
+                    %>
+                    <tr>
+                            <% for i2, v2 in ipairs(fieldList) do %>
+                        <td>
+                            <%= v[v2] %>
+                        </td>
+                            <% end %>
+                    </tr>
+                    <%
+                            end
+                        end
+                    %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-xs-10">
+        <!-- LINE CHART -->
+        <div class="box box-success">
+            <div class="box-header with-border">
+                <h3 class="box-title">小时在线统计图</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                        <i class="fa fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-box-tool" data-widget="remove">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="chart">
+                    <canvas id="lineChart" style="height:250px;width:334px;" width="668" height="500"></canvas>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col (RIGHT) -->
+</div>
+<!-- /.row -->
+
+<script>
+    $(function() {
+
+        var dataList = [];
+        for (var index = 0; index < <%=#fieldList%>; index++)
+        {
+            dataList[index] = []
+        }
+
+        <% 
+            if StatsPage then
+                for i, v in ipairs(StatsPage) do 
+                    for i2, v2 in ipairs(fieldList) do
+        %>
+                        dataList[<%=i2%>-1][<%=i%>-1] = "<%=v[v2]%>"
+        <%  
+                    end
+                end 
+            end 
+        %>
+
+        datasetList1 = [];
+        chart_utils_addDataset(datasetList1, "<%=labelList[2]%>", dataList[1]);
+        chart_utils_addDataset(datasetList1, "<%=labelList[3]%>", dataList[2]);
+        chart_utils_addDataset(datasetList1, "<%=labelList[4]%>", dataList[3]);
+        chart_utils_addDataset(datasetList1, "<%=labelList[5]%>", dataList[4]);
+        chart_utils_addDataset(datasetList1, "<%=labelList[6]%>", dataList[5]);
+        chart_utils_addDataset(datasetList1, "<%=labelList[7]%>", dataList[6]);
+        chart_utils_addDataset(datasetList1, "<%=labelList[8]%>", dataList[7]);
+        chart_utils_addDataset(datasetList1, "<%=labelList[9]%>", dataList[8]);
+        chart_utils_addDataset(datasetList1, "<%=labelList[10]%>", dataList[9]);
+        chart_utils_addDataset(datasetList1, "<%=labelList[11]%>", dataList[10]);
+
+        var config_1 = {
+			type: 'line',
+			data: {
+                labels  : dataList[0],
+                datasets: datasetList1,
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: '', //'Chart.js Line Chart'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: '日期'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: '人次'
+                        }
+                    }]
+                }
+            }
+        };
+
+        // Create the lineChart_1
+        var ctx_1 = document.getElementById("lineChart").getContext('2d')
+        var line_1 = new Chart(ctx_1, config_1)
+        // line_1.update();
+
+    })
+</script>

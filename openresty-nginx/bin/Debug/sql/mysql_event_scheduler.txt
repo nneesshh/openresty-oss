@@ -1,0 +1,156 @@
+﻿-- MySQL设置全局变量connect_timeout为12小时（12*3600=43200）
+
+SET GLOBAL connect_timeout = 43200;
+SET GLOBAL net_read_timeout = 3600;
+SET GLOBAL net_write_timeout = 7200;
+
+-- 再次查看，确认参数是否修改成功
+
+show global variables like '%timeout%';
+
+
+
+-- 查看当前是否已开启事件调度器
+show variables like 'event_scheduler';
+
+-- 要想保证能够执行event事件，就必须保证定时器是开启状态，默认为关闭状态
+set global event_scheduler =1;
+-- 或者
+set GLOBAL event_scheduler = ON;
+
+
+-- 修改表字段
+ALTER TABLE user_harbor_npc CHANGE `satisfaction` `satisfaction` int(11) NOT NULL COMMENT '满意度'
+ALTER TABLE user_state DROP COLUMN IF EXISTS `heartbeat_time`;
+ALTER TABLE user_state ADD COLUMN `heartbeat_time` DATETIME NOT NULL COMMENT '心跳时间';
+
+-- 日期转换
+select from_unixtime(1541581747);
+select unix_timestamp('2018-11-07 17:09:07');
+select date_format('2018-11-07 17:09:07', '%Y-%m-%d %H-%i-%s');  
+
+
+-- password: Admin123.
+
+nginx 配置https签名证书
+一、生成证书
+
+    准备工作：
+        在环境变量中添加环境变量 OPENSSL_HOME 变量值：C:\OpenSSL-Win64\bin;        （变量值为openssl安装位置）
+        在path变量结尾添加如下 ： %OPENSSL_HOME%;
+
+    1.在 nginx 安装目录中创建ssl文件夹用于存放证书，然后以 
+       “ 管理员身份 ” 进入命令行模式进入ssl文件夹。
+
+    2.创建私钥：Enter pass phrase for root.key:（-- password: Admin123.）
+        openssl genrsa -des3 -out my_server_cert.key 1024
+
+    3.创建签名请求证书：
+        openssl req -new -key my_server_cert.key -out my_server_cert.csr
+        
+        输出内容为：
+Enter pass phrase for root.key: ← 输入前面创建的密码 
+Country Name (2 letter code) [AU]:CN ← 国家代号，中国输入CN 
+State or Province Name (full name) [Some-State]:BeiJing ← 省的全名，拼音 
+Locality Name (eg, city) []:BeiJing ← 市的全名，拼音 
+Organization Name (eg, company) [Obsidian Ltd]:MyCompany Corp. ← 公司英文名 
+Organizational Unit Name (eg, section) []: ← 可以不输入 
+Common Name (eg, YOUR name) []: ← 此时不输入 
+Email Address []:admin@mycompany.com ← 电子邮箱，可随意填
+Please enter the following ‘extra’ attributes 
+to be sent with your certificate request 
+A challenge password []: ← 可以不输入 
+An optional company name []: ← 可以不输入
+
+
+    4.使用上述私钥时除去必须的口令，否则会在启动nginx的时候需要输入密码。
+        copy my_server_cert.key my_server_cert.key.org (复制 my_server_cert.key 并重命名为 my_server_cert.key.org)
+
+        除去口令：
+        openssl rsa -in my_server_cert.key.org -out my_server_cert.key
+
+    5.最后标记证书使用上述私钥和CSR和有效期：
+        openssl x509 -req -days 365 -in my_server_cert.csr -signkey my_server_cert.key -out my_server_cert.crt
+
+二、配置nginx的https
+
+　　配置vim nginx.conf
+
+   
+
+ server {
+
+    listen       443 ssl;
+    server_name  192.168.2.90;
+    
+    ssl                        on;
+    ssl_certificate            ssl/my_server_cert.crt;
+    ssl_certificate_key        ssl/my_server_cert.key;
+    #ssl_session_cache          shared:SSL:1m;
+    ssl_session_timeout        600m;
+    #ssl_ciphers                HIGH:!aNULL:!MD5;
+    #ssl_prefer_server_ciphers  on;
+
+    #    ssl_prefer_server_ciphers  on;
+
+　　　　location / {
+
+                     root   html;
+
+            index  index.html index.htm;
+
+        }
+
+    }
+
+
+
+    一直想找一个可以测试各个地方、运营商网络的办法，终于在各方推荐和搜索的情况下找了17ce 和 360奇云测两个网站，感觉非常实用，
+在以后的网络定位中，成了我必备使用的工具，可以非常方便的监控各个运营商、各个地区网站的访问是否通不通、访问的速度快不快等问题
+
+
+ab测试网站压力: 
+        ./ab.exe -r -n 10000 -c 100 https://192.168.1.110:8282/
+        ./ab.exe -c 2 -n 2 http://192.168.1.110:8181/
+
+        for https
+        ./abs.exe -r -n 10000 -c 1000 https://192.168.1.110:8282/Home
+        ./abs.exe -r -n 10000 -c 1000 https://192.168.1.110:8282/static/lib/flatpickr4.5.2/l10n/zh.js
+
+whireshark 过滤器: 
+        http and ip.addr == 192.168.1.110 and tcp.port in {8282}
+        ssl and ip.addr == 192.168.1.110 and tcp.port in {8282}
+        http and ip.addr == 192.168.1.110 and tcp.port == 8282
+
+        ip.addr==192.168.1.110 and tcp.port in {8282} and (tcp.dstport == 63058 or tcp.srcport == 63058)
+        (tcp or ssl) and ip.addr==192.168.1.110 and tcp.port in {8282} and (tcp.dstport == 55626 or tcp.srcport == 55626)
+
+http and ip.addr == 192.168.1.122 and tcp.port == 8181
+microsoft edge: 
+    about:flags -- 开发者工具设置
+
+    开启回环命令 -- 
+    CheckNetIsolation LoopbackExempt -a -n=Microsoft.MicrosoftEdge_8wekyb3d8bbwe 
+
+    添加回环路由
+    route ADD192.168.1.110 MASK 255.255.255.255 192.168.1.5 METRIC 1
+
+    移除
+    route DELETE 192.168.1.110
+
+
+SSL 流程:                首次连接                                              |     重新连接
+    Read <-- 517     Client Hello                                         |     517     Client Hello
+
+    Send ==>914    Server Hello                                         |     152      Server Hello
+                              Certificate                                                            Change Cipher Spec
+                              Server Key Exchange                                            Encrypted Handshake Message
+                              Server Hello Done
+
+    Read <-- 126     Client Exchange                                    |     51       Change Cipher Spec
+                              Change Cipher Spec                                             Encrypted Handshake Message
+                              Encrypted Handshake Message
+
+    Send ==>242     New Session Ticket
+                              Change Cipher Spec
+                              Encrypted Handshake Message
