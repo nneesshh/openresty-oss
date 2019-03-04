@@ -39,10 +39,17 @@ function _M.new(self, id)
             sema_send_packet_queue = false,
             --
             enable_reconnect = true,
-            reconnect_delay_seconds = 1.001
+            reconnect_delay_seconds = 10.001
         },
         mt
     )
+end
+
+--
+function _M.get_packet_obj(self)
+    if self.packet_obj and self.upstream then
+        return self.packet_obj
+    end
 end
 
 --
@@ -81,11 +88,18 @@ function _M.close(self)
 end
 
 --
-function _M.reconnect(self, opts)
-    -- sleep before reconnect
-    print("connid=" .. tostring(self.id) .. ", reconnect after(s): " .. tostring(self.reconnect_delay_seconds))
-    ngx_sleep(self.reconnect_delay_seconds)
-    return self:connect(opts)
+function _M.reconnect(self, opts, last_error)
+    -- try reconnect
+    if self.state ~= STATE_CLOSED and self.enable_reconnect and self.reconnect_delay_seconds > 0 then
+        --
+        print(tostring(last_error))
+        -- sleep before reconnect
+        print("connid=" .. tostring(self.id) .. ", reconnect after(s): " .. tostring(self.reconnect_delay_seconds))
+        ngx_sleep(self.reconnect_delay_seconds)
+        return self:connect(opts)
+    else
+        return nil, last_error
+    end
 end
 
 --
@@ -98,23 +112,23 @@ local function _connect(self, workerid)
                 ", connid:" ..
                     tostring(self.id) ..
                         ", configid: " ..
-                            tostring(self.opts.cfg.id) ..
+                            tostring(self.opts.server.id) ..
                                 ", cname: " ..
-                                self.opts.cfg.name ..
-                                        ", host: " .. self.opts.cfg.host .. ", port: " .. tostring(self.opts.cfg.port)
+                                    self.opts.server.name ..
+                                        ", host: " .. self.opts.server.host .. ", port: " .. tostring(self.opts.server.port)
     end
 
     --10s, 1s, 1s
     sock:settimeouts(10000, 1000, 1000) -- timeout for connect/send/receive
 
     local ok, err2
-    local host = self.opts.cfg.host
+    local host = self.opts.server.host
     if host then
-        local port = self.opts.cfg.port or 8860
+        local port = self.opts.server.port or 8860
 
         ok, err2 = sock:connect(host, port)
     else
-        local path = self.opts.cfg.path
+        local path = self.opts.server.path
         if not path then
             return nil, 'neither "host" nor "path" options are specified'
         end
@@ -135,10 +149,11 @@ local function _connect(self, workerid)
                         ", connid: " ..
                             tostring(self.id) ..
                                 ", configid: " ..
-                                    tostring(self.opts.cfg.id) ..
+                                    tostring(self.opts.server.id) ..
                                         ", cname: " ..
-                                        self.opts.cfg.name ..
-                                                ", host: " .. self.opts.cfg.host .. ", port: " .. tostring(self.opts.cfg.port)
+                                            self.opts.server.name ..
+                                                ", host: " ..
+                                                    self.opts.server.host .. ", port: " .. tostring(self.opts.server.port)
         return nil, errstr
     end
 end
@@ -170,13 +185,8 @@ function _M.connect(self, opts)
         return true
     end
 
-    -- check reconnect
-    if self.state ~= STATE_CLOSED and self.enable_reconnect and self.reconnect_delay_seconds > 0 then
-        print(errstr)
-        return self:reconnect(opts)
-    else
-        return nil, errstr
-    end
+    -- try reconnect
+    return self:reconnect(opts, errstr)
 end
 
 --
@@ -242,24 +252,26 @@ end
 --
 function _M.run(self, opts, workerid)
     local function _run_handler()
+        local pkt, err
+
         --
         self:init_sema()
 
+        -- connect first time
+        local ok = self:connect(opts)
+
         -- run loop
-        while true do
-            -- connect
-            local ok = self:connect(opts)
-            if ok then
-                -- read loop
-                while true do
-                    local pkt, err = self:read_packet()
-                    if not pkt then
-                        print("uptcp run read packet error: " .. err)
-                        break
-                    end
+        while ok do
+            -- read packet loop
+            while true do
+                pkt, err = self:read_packet()
+                if not pkt then
+                    break
                 end
             end
-            -- just connect again
+
+            -- reconnect
+            ok = self:reconnect(opts, err)
         end
     end
     return ngx_thread.spawn(_run_handler)

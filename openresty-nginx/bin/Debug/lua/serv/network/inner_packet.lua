@@ -85,7 +85,6 @@ function _P:read(s)
         end
 
         tbl_insert(self.pkt_r.data, pddata)
-        self.pkt_r.data_size = self.pkt_r.data_size + #pddata
 
         if self.frm_l_r.page_end > 0 then
             break
@@ -154,7 +153,7 @@ function _P:write(s, msgname, msgdata, msgSn)
 
         -- send table directly, no need to concat
         s:send(pkt_w)
-        sent = sent + send_size
+        sent = sent + SIZE_OF_FRAME_PAGE_LEADING + send_size
     end
 
     return sent
@@ -205,8 +204,7 @@ _P.new = function()
         pkt_r = {
             sn = 0,
             name = "",
-            data_size = 0,
-            data = {}
+            data = {} -- may has multiple pages
         },
         -- write
         frm_l_w = frame_leading_t(),

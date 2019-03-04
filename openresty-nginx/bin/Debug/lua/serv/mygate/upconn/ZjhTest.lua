@@ -10,13 +10,14 @@ local _M = {
 -- Localize
 local cwd = (...):gsub("%.[^%.]+$", "") .. "."
 local pdir = (...):gsub("%.[^%.]+%.[^%.]+$", "") .. "."
-local cfg_robot = require(pdir .. "config.zjh_robot")
+local cfg_game_zjh = require(pdir .. "config.game_zjh")
+local msg_dispatcher = require(cwd .."ZjhMsgDispatcher")
+local robot_cls = require(cwd .. "ZjhTestRobot")
+
 local uptcpd = require("serv.network.uptcp")
 --local packet_cls = require("serv.network.outer_packet")
 --local packet_cls = require("serv.network.inner_packet")
 local packet_cls = require("serv.network.zjh_packet")
-
-local robot_cls = require(cwd .. "ZjhTestRobot")
 
 --
 function _M.onUpconnAdd(upconn)
@@ -68,13 +69,17 @@ end
 
 --
 function _M.start()
+    --
     if not _M.running then
+        --
+        robot_cls.doRegisterMsgCallbacks()
+
         local connected_cb = function(self)
             print("connected_cb, connid=", tostring(self.id))
 
-            local robot = robot_cls:new(self)
-            robot:start()
-
+            self.user = self.user or {}
+            self.user.robot = robot_cls:new(self)
+            self.user.robot:start(self.opts.robot)
         end
 
         local disconnected_cb = function(self)
@@ -82,16 +87,18 @@ function _M.start()
         end
 
         local got_packet_cb = function(self, pkt)
-            print("got_packet_cb, connid=", tostring(self.id))
+            msg_dispatcher.dispatch(self, pkt.sessionid, pkt.msgid, pkt.data)
         end
 
         --
-        for i, v in ipairs(cfg_robot.servers) do
-            if v.enable then
-                for j = 1, 1 do                
+        for _1, server in ipairs(cfg_game_zjh.servers) do
+            if server.enable then
+                local num = 1
+                for _2, robot in ipairs(cfg_game_zjh.robots) do
                     local upconn = _M.createUpconn()
                     local opts = {
-                        cfg = v,
+                        server = server,
+                        robot = robot,
                         packet_cls = packet_cls,
                         connected_cb = connected_cb,
                         disconnected_cb = disconnected_cb,
@@ -109,11 +116,4 @@ function _M.start()
     end
 end
 
-return setmetatable(
-    _M,
-    {
-        __call = function(_, msg, msgSn)
-            _M.onForward(msg, msgSn)
-        end
-    }
-)
+return _M
