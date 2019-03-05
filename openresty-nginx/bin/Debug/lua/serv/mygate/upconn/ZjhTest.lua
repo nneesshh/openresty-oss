@@ -93,7 +93,7 @@ function _M.start()
         --
         for _1, server in ipairs(cfg_game_zjh.servers) do
             if server.enable then
-                local num = 1
+                local num = 0
                 for _2, robot in ipairs(cfg_game_zjh.robots) do
                     local upconn = _M.createUpconn()
                     local opts = {
@@ -107,6 +107,12 @@ function _M.start()
 
                     --
                     upconn:run(opts)
+
+                    --
+                    num = num + 1
+                    if num > 1 then
+                        break
+                    end
                 end
             end
         end

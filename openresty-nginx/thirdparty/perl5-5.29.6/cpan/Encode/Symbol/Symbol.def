@@ -1,0 +1,4 @@
+LIBRARY "Symbol"
+EXPORTS
+  boot_Encode__Symbol
+  

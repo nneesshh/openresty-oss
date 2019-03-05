@@ -1,0 +1,4 @@
+LIBRARY "attributes"
+EXPORTS
+  boot_attributes
+  

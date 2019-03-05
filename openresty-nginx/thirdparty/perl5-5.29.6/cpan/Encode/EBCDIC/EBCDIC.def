@@ -1,0 +1,4 @@
+LIBRARY "EBCDIC"
+EXPORTS
+  boot_Encode__EBCDIC
+  

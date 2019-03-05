@@ -1,0 +1,4 @@
+LIBRARY "Typemap"
+EXPORTS
+  boot_XS__Typemap
+  

@@ -1,11 +1,11 @@
 *.[oa]
-*.so
+#*.so
 *.obj
-*.lib
+#*.lib
 *.exp
-*.dll
-*.exe
-*.manifest
+#*.dll
+#*.exe
+#*.manifest
 *.dmp
 *.swp
 .tags

@@ -1,0 +1,4 @@
+LIBRARY "Bzip2"
+EXPORTS
+  boot_Compress__Raw__Bzip2
+  
