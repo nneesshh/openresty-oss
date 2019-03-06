@@ -40,11 +40,6 @@ function _M.onUpconnRemove(upconn)
 end
 
 --
-function _M.onForward(msg, msgSn)
-    print("forward: ", msg, msgSn)
-end
-
---
 function _M.createUpconn()
     --
     local nextConnId = _M.nextConnId
@@ -69,8 +64,8 @@ end
 
 --
 function _M.start()
-    --local TEST_NUM_MAX = #cfg_game_zjh.robots
-    local TEST_NUM_MAX = 1
+    local TEST_NUM_MAX = #cfg_game_zjh.robots
+    --local TEST_NUM_MAX = 1
 
     --
     if not _M.running then
@@ -83,7 +78,7 @@ function _M.start()
             self.user = self.user or {}
             self.user.robot = robot_cls:new(self)
             self.user.robot.cfg = self.opts.robot
-            self.user.robot:start()
+            self.user.robot:register()
         end
 
         local disconnected_cb = function(self)

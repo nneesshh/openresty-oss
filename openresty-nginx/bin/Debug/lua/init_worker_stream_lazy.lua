@@ -18,6 +18,7 @@ local d = require("serv.mygate.upconn.Forward")
 ]]
 
 ngx.log(NOTICE, "start ZjhTest...")
+--local d = require("serv.mygate.upconn.ZjhTestRegister")
 local d = require("serv.mygate.upconn.ZjhTest")
 
 d.start()

@@ -118,8 +118,8 @@ local function _connect(self, workerid)
                                         ", host: " .. self.opts.server.host .. ", port: " .. tostring(self.opts.server.port)
     end
 
-    --10s, 1s, 1s
-    sock:settimeouts(10000, 1000, 1000) -- timeout for connect/send/receive
+    --30s, 1s, 30s
+    sock:settimeouts(30000, 1000, 30000) -- timeout for connect/send/receive
 
     local ok, err2
     local host = self.opts.server.host

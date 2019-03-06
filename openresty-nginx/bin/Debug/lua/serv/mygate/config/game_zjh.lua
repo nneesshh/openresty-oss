@@ -27,7 +27,19 @@ local _M = {
         }
     },
     --
-    robots = cfg_mgzjh_robot.ConfigRobot
+    robots = {}
 }
+
+-- init and sort robots
+local __tmp_tbl__ = cfg_mgzjh_robot.ConfigRobot
+for _, v in pairs(__tmp_tbl__) do
+    table.insert(_M.robots, v)
+end
+table.sort(
+    _M.robots,
+    function(a, b)
+        return a.userid < b.userid
+    end
+)
 
 return _M
