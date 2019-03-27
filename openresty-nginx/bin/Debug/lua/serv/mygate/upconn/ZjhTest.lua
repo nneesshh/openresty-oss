@@ -12,12 +12,12 @@ local cwd = (...):gsub("%.[^%.]+$", "") .. "."
 local pdir = (...):gsub("%.[^%.]+%.[^%.]+$", "") .. "."
 local cfg_game_zjh = require(pdir .. "config.game_zjh")
 local msg_dispatcher = require(cwd .."ZjhMsgDispatcher")
-local robot_cls = require(cwd .. "ZjhTestRobot")
+local robot_cls = require(cwd .. "ZjhRobot")
 
-local uptcpd = require("serv.network.uptcp")
---local packet_cls = require("serv.network.outer_packet")
---local packet_cls = require("serv.network.inner_packet")
-local packet_cls = require("serv.network.zjh_packet")
+local uptcpd = require("network.uptcp")
+--local packet_cls = require("network.outer_packet")
+--local packet_cls = require("network.inner_packet")
+local packet_cls = require("network.zjh_packet")
 
 --
 function _M.onUpconnAdd(upconn)
@@ -70,7 +70,7 @@ end
 --
 function _M.start()
     --local TEST_NUM_MAX = #cfg_game_zjh.robots
-    local TEST_NUM_MAX = 1
+    local TEST_NUM_MAX = 2
 
     --
     if not _M.running then
@@ -79,6 +79,9 @@ function _M.start()
 
         local connected_cb = function(self)
             print("connected_cb, connid=", tostring(self.id))
+
+            -- for debug
+            self.ZjhTest = require(cwd .."ZjhTest")
 
             self.user = self.user or {}
             self.user.robot = robot_cls:new(self)
@@ -91,7 +94,7 @@ function _M.start()
         end
 
         local got_packet_cb = function(self, pkt)
-            msg_dispatcher.dispatch(self, pkt.sessionid, pkt.msgid, pkt.data)
+            msg_dispatcher.dispatch(self, pkt.sessionid, pkt.msgid)
         end
 
         --

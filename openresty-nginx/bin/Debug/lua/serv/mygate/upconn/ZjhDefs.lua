@@ -30,6 +30,7 @@ local MsgId = {
     MSGID_SHOW_CARD_REQ = 0x2004, --		//看牌
     MSGID_COMPARE_CARD_REQ = 0x2005, --		//比牌
     MSGID_GIVE_UP_REQ = 0x2006, --		//弃牌
+    --
     MSGID_USER_STATUS_NOTIFY = 0x2021, --		//用户状态改变通知
     MSGID_GAME_START_NOTIFY = 0x2022, --		//游戏开始通知
     MSGID_GAME_OVER_NOTIFY = 0x2023, --		//游戏结束通知
@@ -39,7 +40,7 @@ local MsgId = {
     MSGID_SHOW_CARD_NOTIFY = 0x2027, --		//看牌
     MSGID_COMPARE_CARD_NOTIFY = 0x2028, --		//比牌
     MSGID_GIVE_UP_NOTIFY = 0x2029, --		//弃牌
-    MSGID_LOGIN_BY_OTHER_DEVICE_NOTIFY = 0x202A, --		//其他用户登录
+    MSGID_RELOGIN_NOTIFY = 0x202A, --		//其他用户登录
     MSGID_CLOSE_CONNECTION = 0x03, --		//
     MSGID_CREATE_HANDLER = 0x04, --		//
     MSGID_CLOSE_HANDLER = 0x05 --		//

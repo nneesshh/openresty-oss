@@ -24,7 +24,7 @@ local _M = {}
     }
 ]]
 -- Localize
-local client_helper = require("serv.network.client_helper")
+local client_helper = require("network.client_helper")
 
 local pdir = (...):gsub("%.[^%.]+%.[^%.]+$", "") .. "."
 local ppdir = (...):gsub('%.[^%.]+%.[^%.]+%.[^%.]+$', '') .. "."

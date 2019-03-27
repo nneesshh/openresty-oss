@@ -53,7 +53,7 @@ end
 
 -- send message
 function _M.sendMessage(msg, msgSn)
-    local sMgr = require("serv.network.SessionManager")
+    local sMgr = require("network.SessionManager")
     sMgr.send(msg, msgSn)
 end
 

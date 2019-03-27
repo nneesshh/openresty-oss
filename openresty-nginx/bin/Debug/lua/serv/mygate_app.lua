@@ -6,8 +6,8 @@ local _M = {
 }
 
 -- Localize
-local smfactory = require("serv.network.session_manager_factory")
-local serverd = require("serv.network.server")
+local smfactory = require("network.session_manager_factory")
+local serverd = require("network.server")
 local tbl_concat = table.concat
 
 local cwd = (...):gsub("%.[^%.]+$", "") .. "."

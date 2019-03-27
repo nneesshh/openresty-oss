@@ -11,7 +11,7 @@ local _M = {
 local cwd = (...):gsub("%.[^%.]+$", "") .. "."
 local pdir = (...):gsub("%.[^%.]+%.[^%.]+$", "") .. "."
 local cfg_upconn = require(pdir .. "config.forward")
-local uptcpd = require("serv.network.uptcp")
+local uptcpd = require("network.uptcp")
 
 --
 function _M.onUpconnAdd(upconn)
