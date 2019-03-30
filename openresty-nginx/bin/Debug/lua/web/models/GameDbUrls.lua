@@ -1,40 +1,50 @@
-local Model = require("lapis.db.model").Model
-local schema = require("lapis.db.schema")
-local types = schema.types
-
-local split = require("utils.split")
-
-local uuid = require("uuid")
+local tostring = tostring
+local tbl_insert = table.insert
 
 -- Localize
-local cwd = (...):gsub('%.[^%.]+$', '') .. "."
-local default_options = require("db.default_mysql_options")
-local db_options = require("db.mysql_options")
+local cwd = (...):gsub("%.[^%.]+$", "") .. "."
+local default_options = require("db.default_mongodb_options")
+local db_options = require("db.mongodb_options")
+local model = require(cwd .. "MongoModel")
 
 local _M = {
-  _db_entity = Model:extend(default_options, "gamedburls", {
-    primary_key = "Id"
-  }),
-
-  --
-  _game_db_options = false,
+    colName = "gamedburls"
 }
 
-function _M.create() 
-  local res, err = _M._db_entity:create({
-    Id  = uuid.generate(),
-  })
-  assert(res, err)
-  return res
+function _M.create()
+    local h = model:new(default_options)
+
+    h:release()
+end
+
+function _M.get(id)
+    local h = model:new(default_options)
+    local col = h:getCol(_M.colName)
+    local r = col:find_one({_id = model.newObid(id)})
+    h:release()
+    return model.getBsonVal(r)
+end
+
+function _M.getByCode(code)
+    local h = model:new(default_options)
+    local col = h:getCol(_M.colName)
+    local r = col:find_one({Code = code})
+    h:release()
+    return model.getBsonVal(r)
 end
 
 function _M.getAll(ntype) 
-  ntype = ntype or 0
-  return _M._db_entity:select("WHERE type = ?", ntype, { fields = "*" })
-end
-
-local function _getOptionsFromGameDbUrls(objList)
-  
+    ntype = ntype or 0
+    local h = model:new(default_options)
+    local col = h:getCol(_M.colName)
+    --
+    local r = {}
+    local cursor = col:find({Type = ntype})
+    for row in cursor:iterator() do
+        tbl_insert(r, row)
+    end
+    h:release()
+    return r
 end
 
 function _M.getOptions()

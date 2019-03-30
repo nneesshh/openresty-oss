@@ -92,7 +92,7 @@ function _M.new(settings)
 
     return options
   else
-    error("unsupported settings type for db_options!!! type(settings)=" .. type(setting))
+    error("unsupported settings type for db_options!!! type(settings)=" .. type(settings))
   end
 end
 

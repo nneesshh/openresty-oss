@@ -7,14 +7,13 @@ math.pow = math.pow or function(x, y)
         return x ^ y
     end
 
-local match = string.match
+local strmatch = string.match
 local floor = math.floor
-
 local randseed = math.randomseed
 local rand = math.random
 local rand_init = function()
-    math.randomseed(os.time())
-    math.random(1, 10000)
+    randseed(os.time())
+    rand(1, 10000)
 end
 rand_init()
 

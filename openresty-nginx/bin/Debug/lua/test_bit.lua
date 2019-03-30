@@ -1,4 +1,23 @@
+--[[
+    Supported functions:
+        bit.tobit,
+        bit.tohex,
+        bit.bnot,
+        bit.band,
+        bit.bor,
+        bit.bxor,
+        bit.lshift,
+        bit.rshift,
+        bit.arshift,
+        bit.rol,
+        bit.ror,
+        bit.bswap
+]]
 local bit = require("bit")
+local bnot, band, bor, bxor = bit.bnot, bit.band, bit.bor, bit.bxor
+local lshift, rshift, arshift, rol = bit.lshift, bit.rshift, bit.arshift, bit.rol
+local bit_tohex = bit.tohex
+local bit_tobit = bit.tobit -- This function is usually not needed
 
 local function bin2hex(s)
     s =
@@ -44,35 +63,57 @@ local function hex2bin(hexstr)
 end
 
 function printx(x)
-    print("0x" .. bit.tohex(x))
+    print("0x" .. bit_tohex(x))
 end
 
 function printbin(x)
-    print("bin..." .. hex2bin(bit.tohex(x)))
+    print("bin..." .. hex2bin(bit_tohex(x)))
 end
 
-print(bit.lshift(1, 0)) -- > 1
-print(bit.lshift(1, 8)) -- > 256
-print(bit.lshift(1, 40)) -- > 256
-print(bit.rshift(256, 8)) -- > 1
-print(bit.rshift(-256, 8)) -- > 16777215
-print(bit.arshift(256, 8)) -- > 1
-print(bit.arshift(-256, 8)) -- > -1
-printx(bit.lshift(0x87654321, 12)) -- > 0x54321000
-printx(bit.rshift(0x87654321, 12)) -- > 0x00087654
-printx(bit.arshift(0x87654321, 12)) -- > 0xfff87654
+print(lshift(1, 0)) -- > 1
+print(lshift(1, 8)) -- > 256
+print(lshift(1, 40)) -- > 256
+print(rshift(256, 8)) -- > 1
+print(rshift(-256, 8)) -- > 16777215
+print(arshift(256, 8)) -- > 1
+print(arshift(-256, 8)) -- > -1
+printx(lshift(0x87654321, 12)) -- > 0x54321000
+printx(rshift(0x87654321, 12)) -- > 0x00087654
+printx(arshift(0x87654321, 12)) -- > 0xfff87654
 
 print("\n22222222222222222222")
-local fl = bit.tobit(string.byte("z") * 256 + string.byte("z"))
+local fl = bit_tobit(string.byte("z") * 256 + string.byte("z"))
 print(fl)
 printx(fl)
 
-local fl2 = bit.rshift(fl, 2)
+local fl2 = rshift(fl, 2)
 print(fl2)
 printx(fl2)
 
 print("\n33333333333333333333333")
-local b3 = bit.band(fl, 0x3FFF)
+local b3 = band(fl, 0x3FFF)
 print(b3)
 printx(b3)
 printbin(b3)
+
+print("\n444444444444444444444444444444444444444444")
+local TICKETID_MIN = 1000001
+local TICKETID_MAX = 9999999 
+local function encryptTicketId7(id)
+    local sid
+	sid = band(id, 0xffff0000)
+    sid = sid + lshift(band(id, 0x0000000f), 12)
+    sid = sid + rshift(band(id, 0x0000f000), 12)
+    sid = sid + lshift(band(id, 0x000000f0), 4)
+    sid = sid + rshift(band(id, 0x00000f00), 4)
+	sid = bxor(sid, 113579)
+	sid = sid + TICKETID_MIN
+	assert(sid >= TICKETID_MIN and sid < TICKETID_MAX)
+	return sid
+end
+
+for i=10, 40 do
+    print(i, encryptTicketId7(i))
+end
+
+print("\nover")

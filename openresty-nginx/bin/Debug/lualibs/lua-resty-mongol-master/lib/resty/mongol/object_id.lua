@@ -49,7 +49,14 @@ local machineid
 if hasposix then
     machineid = posix.uname("%n")
 else
-    machineid = assert(io.popen("uname -n")):read("*l")
+    local IS_WINDOWS = (package.config:sub(1, 1) == "\\")
+    if IS_WINDOWS then
+        local lcu = require("lcu")
+        local netcard, ip, mac, hostname = lcu.get_net_info()
+        machineid = hostname
+    else
+        machineid = assert(io.popen("uname -n")):read("*l")
+    end
 end
 machineid = ngx.md5_bin(machineid):sub(1, 3)
 

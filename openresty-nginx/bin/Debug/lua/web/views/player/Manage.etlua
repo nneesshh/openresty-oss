@@ -1,7 +1,7 @@
 ﻿<script type="text/javascript">
-    function _do_ajax_call_PlayerManageQueryOnline() {
+    function _do_ajax_call_PlayerCenterQueryOnline() {
         $.ajax({
-            url: "/PlayerManage/QueryOnline",
+            url: "/PlayerCenter/QueryOnline",
             type: "GET",
             dataType: "html",
             //async: false,
@@ -15,9 +15,9 @@
         });
     };
 
-    function _do_ajax_call_PlayerManageQueryCharge() {
+    function _do_ajax_call_PlayerCenterQueryCharge() {
         $.ajax({
-            url: "/PlayerManage/QueryCharge",
+            url: "/PlayerCenter/QueryCharge",
             type: "GET",
             dataType: "html",
             //async: false,
@@ -43,7 +43,7 @@
 
 <div class="row">
     <div class="col-sm-offset-1 col-sm-3">
-        <a class="btn btn-block" href="javascript:void(0)" onclick="_do_ajax_call_PlayerManageQueryOnline()"><h3><u>查询在线</u></h3></a>
+        <a class="btn btn-block" href="javascript:void(0)" onclick="_do_ajax_call_PlayerCenterQueryOnline()"><h3><u>查询在线</u></h3></a>
     </div>
 </div>
 
@@ -51,6 +51,6 @@
 
 <div class="row">
     <div class="col-sm-offset-1 col-sm-3">
-        <a class="btn btn-block" href="javascript:void(0)" onclick="_do_ajax_call_PlayerManageQueryCharge()"><h3><u>查询充值</u></h3></a>
+        <a class="btn btn-block" href="javascript:void(0)" onclick="_do_ajax_call_PlayerCenterQueryCharge()"><h3><u>查询充值</u></h3></a>
     </div>
 </div>

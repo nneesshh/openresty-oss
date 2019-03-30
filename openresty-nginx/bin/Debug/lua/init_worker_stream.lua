@@ -73,7 +73,7 @@ if 0 == ngx_worker.id() then
                 return
             end
 
-            require("init_worker_stream_lazy")
+            --require("init_worker_stream_lazy")
         end
     )
     if not ok then

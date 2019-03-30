@@ -37,7 +37,7 @@
 %>
 
 <script type="text/javascript">
-    function _do_ajax_submit_query_charge_PlayerManageForm() {
+    function _do_ajax_submit_query_charge_PlayerCenterForm() {
         
         $("#successInfo").empty();
 
@@ -45,12 +45,12 @@
         if (l.length >= 2) {
             var beginDate = $("<input type='hidden' name='BeginDate' value='" + flatpickr.formatDate(l[0], "Y-m-d") + "'/>")
             var endDate = $("<input type='hidden' name='EndDate' value='" + flatpickr.formatDate(l[1], "Y-m-d") + "'/>")
-            $('#playerManageForm').append(beginDate);
-            $('#playerManageForm').append(endDate);
+            $('#playerCenterForm').append(beginDate);
+            $('#playerCenterForm').append(endDate);
         }
 
         var option = {
-            url : '/PlayerManage/QueryCharge',
+            url : '/PlayerCenter/QueryCharge',
             type : 'POST',
             dataType: 'html',
             //headers: { "ClientCallMode" : "ajax" }, //添加请求头部
@@ -64,7 +64,7 @@
                         ", errorThrown=" + errorThrown);
             },
         };
-        $("#playerManageForm").ajaxSubmit(option);
+        $("#playerCenterForm").ajaxSubmit(option);
         return false; //最好返回false，因为如果按钮类型是submit,则表单自己又会提交一次;返回false阻止表单再次提交
     };
 
@@ -91,14 +91,14 @@
 
     <!-- query button -->
     <div class="col-sm-12">
-        <form class="form-horizontal" role="form" id="playerManageForm">
+        <form class="form-horizontal" role="form" id="playerCenterForm">
             <div class="form-group">
                 <label class="col-sm-2 control-label" style="width:200px;">输入玩家账号名称:</label>
                 <div class="col-sm-4">
                     <input style="width:230px;" type="text" id="userId" name="UserId" value="<%= userId or '' %>" />
                 </div>
                 <div class="col-sm-2 ">
-                    <a class="btn btn-primary" style="width:100px;" href="javascript:void(0)" onclick="_do_ajax_submit_query_charge_PlayerManageForm()">查询</a>
+                    <a class="btn btn-primary" style="width:100px;" href="javascript:void(0)" onclick="_do_ajax_submit_query_charge_PlayerCenterForm()">查询</a>
                 </div>
             </div>
 

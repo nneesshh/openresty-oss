@@ -10,6 +10,7 @@ local t_concat = table.concat
 local strformat = string.format
 local strmatch = string.match
 local strbyte = string.byte
+local math_ceil = math.ceil
 
 local ll = require ( mod_name .. ".ll" )
 local le_uint_to_num = ll.le_uint_to_num
@@ -124,7 +125,11 @@ local function pack ( k , v )
 	local mt = getmetatable ( v )
 
 	if ot == "number" then
-		return "\1" .. k .. "\0" .. to_double ( v )
+		if math_ceil(v) == v then
+			return "\16" .. k .. "\0" .. num_to_le_int ( v )
+		else
+			return "\1" .. k .. "\0" .. to_double ( v )
+		end
 	elseif ot == "nil" then
 		return "\10" .. k .. "\0"
 	elseif ot == "string" then

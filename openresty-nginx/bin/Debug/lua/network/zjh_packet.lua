@@ -56,6 +56,7 @@ void              memory_stream_write_int16(memory_stream_t *stream, int16_t d2)
 void              memory_stream_write_int32(memory_stream_t *stream, int32_t d4);
 void              memory_stream_write_int64(memory_stream_t *stream, int64_t d8);
 void              memory_stream_write_string(memory_stream_t *stream, const char *str, int16_t len);
+void              memory_stream_write_raw(memory_stream_t *stream, unsigned char *src, int len);
 
 ]]
 
@@ -97,9 +98,11 @@ function _P:read(s)
         self.pkt_r.msgid = self.frm_l_r.msgId
         self.pkt_r.msgsize = bodydata_size
 
+        local bodydata2 = ffi.cast("unsigned char *", bodydata)
+
         -- write body to stream
         ffilib_lcu.memory_stream_reset(self.pkt_r_stream)
-        ffilib_lcu.memory_stream_write_raw(self.pkt_r_stream, bodydata, self.pkt_r.msgsize)
+        ffilib_lcu.memory_stream_write_raw(self.pkt_r_stream, bodydata2, bodydata_size)
 
         break
     end

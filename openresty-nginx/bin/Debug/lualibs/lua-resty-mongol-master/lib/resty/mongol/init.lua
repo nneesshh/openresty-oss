@@ -1,4 +1,4 @@
-module("resty.mongol", package.seeall)
+--module("resty.mongol", package.seeall)
 
 local mod_name = (...)
 
@@ -125,7 +125,9 @@ end
 
 connmt.__call = connmethods.new_db_handle
 
-function new(self)
+local _M = {}
+
+function _M.new(self)
     return setmetatable ( {
             sock = socket();
             host = "localhost";
@@ -133,8 +135,13 @@ function new(self)
         } , connmt )
 end
 
--- to prevent use of casual module global variables
-getmetatable(resty.mongol).__newindex = function (table, key, val)
-    error('attempt to write to undeclared variable "' .. key .. '": '
-            .. debug.traceback())
-end
+local mt = {
+    __index = _M,
+    -- to prevent use of casual module global variables
+    __newindex = function (table, key, val)
+        error('attempt to write to undeclared variable "' .. key .. '": '
+                .. debug.traceback())
+    end
+}
+setmetatable(_M, mt)
+return _M

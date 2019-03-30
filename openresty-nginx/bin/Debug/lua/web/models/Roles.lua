@@ -1,34 +1,35 @@
-local Model = require("lapis.db.model").Model
-local schema = require("lapis.db.schema")
-local types = schema.types
-
-local uuid = require("uuid")
+local tostring = tostring
+local tbl_insert = table.insert
 
 -- Localize
-local cwd = (...):gsub('%.[^%.]+$', '') .. "."
-local default_options = require("db.default_mysql_options")
+local cwd = (...):gsub("%.[^%.]+$", "") .. "."
+local default_options = require("db.default_mongodb_options")
+local model = require(cwd .. "MongoModel")
 
 local _M = {
-  _db_entity = Model:extend(default_options, "roles", {
-    primary_key = "id"
-  }),
+    colName = "roles"
 }
 
-function _M.create() 
-  local res, err = _M._db_entity:create({
-    Id  = uuid.generate(),
-    Code = "any",
-  })
-  assert(res, err)
-  return res
+function _M.create()
+    local h = model:new(default_options)
+
+    h:release()
 end
 
-function _M.get(id) 
-  return _M._db_entity:find(id)
+function _M.get(id)
+    local h = model:new(default_options)
+    local col = h:getCol(_M.colName)
+    local r = col:find_one({_id = model.newObid(id)})
+    h:release()
+    return model.getBsonVal(r)
 end
 
-function _M.getByCode(code) 
-  return _M._db_entity:find({ Code = code })
+function _M.getByCode(code)
+    local h = model:new(default_options)
+    local col = h:getCol(_M.colName)
+    local r = col:find_one({Code = code})
+    h:release()
+    return model.getBsonVal(r)
 end
 
 return _M

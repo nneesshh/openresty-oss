@@ -47,7 +47,7 @@ return function(app)
       local user = Users.getByName(self.params.UserName)
       if user and user.UserName == self.params.UserName and user.Password == self.params.Password then
         local UserRoles = require("models.UserRoles")
-        local user_roles = UserRoles.getByUserId(user.Id)
+        local user_roles = UserRoles.getByUserId(user.UserName)
         
         self.session.user = user
         self.session.roles = user_roles

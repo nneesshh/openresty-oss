@@ -7,39 +7,52 @@
         createBy = session.user.Name
     end
 
-    local userId
+    local userTicketId, userName
     if params then
-        userId = params.UserId
+        userTicketId = params.UserTicketId
+        userName = params.UserName
     end
     
     local labelList = {
         'ID',
         '用户名',
         '昵称',
-        '等级',
-        '经验值',
+        '余额',
+        'ip',
+        '住址',
+        'imei',
+        'imsi',
+        '注册时间',
         '登出时间',
         '登入时间',
     }
 
     local fieldList = {
         'ticketid',
-        'userid',
-        'nick',
-        'level',
-        'exp',
+        'user_name',
+        'nick_name',
+        'coin',
+        'ip',
+        'addr',
+        'imei',
+        'imsi',
+        'createtime',
         'logouttime',
         'logintime',
     }
+   
 %>
 
 <script type="text/javascript">
-    function _do_ajax_submit_query_online_PlayerManageForm() {
-        
+    function _do_ajax_submit_query_online_PlayerCenterForm(byTicketId) {
+
+        var inputCond = $("<input type='hidden' name='ByTicketId' value='" + byTicketId + "'/>")
+        $('#playerCenterForm').append(inputCond);
+
         $("#successInfo").empty();
 
         var option = {
-            url : '/PlayerManage/QueryOnline',
+            url : '/PlayerCenter/QueryOnline',
             type : 'POST',
             dataType: 'html',
             //headers: { "ClientCallMode" : "ajax" }, //添加请求头部
@@ -53,7 +66,7 @@
                         ", errorThrown=" + errorThrown);
             },
         };
-        $("#playerManageForm").ajaxSubmit(option);
+        $("#playerCenterForm").ajaxSubmit(option);
         return false; //最好返回false，因为如果按钮类型是submit,则表单自己又会提交一次;返回false阻止表单再次提交
     };
 
@@ -80,14 +93,23 @@
 
     <!-- query button -->
     <div class="col-sm-12">
-        <form class="form-horizontal" role="form" id="playerManageForm">
+        <form class="form-horizontal" role="form" id="playerCenterForm">
+            <div class="form-group">
+                <label class="col-sm-2 control-label" style="width:200px;">输入玩家7位数字ID:</label>
+                <div class="col-sm-4">
+                    <input style="width:200px;" type="text" id="userTickedId" name="UserTicketId" value="<%= userTicketId or '' %>" />
+                </div>
+                <div class="col-sm-2 ">
+                    <a class="btn btn-primary" style="width:100px;" href="javascript:void(0)" onclick="_do_ajax_submit_query_online_PlayerCenterForm(true)">查询</a>
+                </div>
+            </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label" style="width:200px;">输入玩家账号名称:</label>
                 <div class="col-sm-4">
-                    <input style="width:200px;" type="text" id="userId" name="UserId" value="<%= userId or '' %>" />
+                    <input style="width:200px;" type="text" id="userName" name="UserName" value="<%= userName or '' %>" />
                 </div>
                 <div class="col-sm-2 ">
-                    <a class="btn btn-primary" style="width:100px;" href="javascript:void(0)" onclick="_do_ajax_submit_query_online_PlayerManageForm()">查询</a>
+                    <a class="btn btn-primary" style="width:100px;" href="javascript:void(0)" onclick="_do_ajax_submit_query_online_PlayerCenterForm(false)">查询</a>
                 </div>
             </div>
         </form>

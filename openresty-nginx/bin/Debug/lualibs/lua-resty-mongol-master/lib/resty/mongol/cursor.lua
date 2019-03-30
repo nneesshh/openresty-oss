@@ -1,6 +1,7 @@
 local t_insert = table.insert
 local t_remove = table.remove
 local t_concat = table.concat
+local t_sort = table.sort
 local strbyte = string.byte
 local strformat = string.format
 
@@ -73,7 +74,7 @@ function cursor_methods:sort(field, size)
             end
 
     if #self.results > self.i then
-        table.sort(self.results, sort_f)
+        t_sort(self.results, sort_f)
     elseif #self.results == 0 and self.i == 0 then
         if self.num_each == 0 and self.limit_n ~= 0 then
             size = self.limit_n
@@ -86,7 +87,7 @@ function cursor_methods:sort(field, size)
         
         self.id, self.results, t = self.col:query(self.query, 
                         self.returnfields, self.i, size)
-        table.sort(self.results, sort_f)
+        t_sort(self.results, sort_f)
     else
         return nil, "sort must be an array"
     end

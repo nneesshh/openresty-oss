@@ -16,7 +16,7 @@ local validate = require("lapis.validate")
 local auth = require(cwd .. "authorize")
 
 return function(app)
-  app:match("player_manage", "/PlayerManage", respond_to({
+  app:match("player_manage", "/PlayerCenter", respond_to({
     --
     before = function(self)
       auth(self, "any", self.route_name)
@@ -29,7 +29,7 @@ return function(app)
     
   }))
 
-  app:match("player_manager_query_online", "/PlayerManage/QueryOnline", respond_to({
+  app:match("player_query_online", "/PlayerCenter/QueryOnline", respond_to({
     --
     before = function(self)
       auth(self, "any", self.route_name)
@@ -42,23 +42,51 @@ return function(app)
 
     --
     POST = capture_errors(function(self)
-      validate.assert_valid(self.params, {
-        { "UserId", exists = true, min_length = 2, max_length = 50 },
-      })
+      local byTicketId = false
+      local ticketid = 0
+      if self.params.ByTicketId == "true" then
+        byTicketId = true
+        validate.assert_valid(self.params, {
+          { "UserTicketId", exists = true, min_length = 7, max_length = 7 },
+        })
+        ticketid = tonumber(self.params.UserTicketId)
+        if not ticketid then
+          assert_error(false, "UserTicketId(" .. tostring(self.params.UserTicketId) ..  ") must be a 7 digit number!!!")
+        end
+      else
+        validate.assert_valid(self.params, {
+          { "UserName", exists = true, min_length = 2, max_length = 50 },
+        })
+      end
     
-      local PlayerManage = require("models.PlayerManage")
-      
-      -- check userid 
-      local bExist = PlayerManage.checkUserId(self.params.UserId)
-      if not bExist then
-        assert_error(false, "UserId(" .. tostring(self.params.UserId) ..  ") not exist!!!")
+      local PlayerCenter = require("models.PlayerCenter")
+
+      local userInfo
+      if byTicketId then
+        -- check player ticketid 
+        userInfo = PlayerCenter.getUserInfoByTicketId(ticketid)
+        if not userInfo then
+          assert_error(false, "UserTicketId(" .. tostring(self.params.UserTicketId) ..  ") not exist!!!")
+        end
+      else
+        -- check player username
+        userInfo = PlayerCenter.getUserInfo(self.params.UserName)
+        if not userInfo then
+          assert_error(false, "UserName(" .. tostring(self.params.UserName) ..  ") not exist!!!")
+        end
       end
 
-      local data = PlayerManage.getPlayerOnline(self.params.UserId)
+      local userState = PlayerCenter.getUserState(userInfo.user_name)
       
+      -- merge userState and userInfo
+      local data = userState or {}
+      for k, v in pairs(userInfo) do
+        data[k] = v
+      end
+
       if data and self.session.user then
         self.success_infos = { "Success" }
-        self.PlayerData = data
+        self.PlayerData = { data } -- PlayerData is a row array
         return { render = "player.QueryOnline", layout = false }
       else
         --assert_error(false, "xxxx错误!")
@@ -71,7 +99,7 @@ return function(app)
     
   }))
 
-  app:match("player_manager_query_charge", "/PlayerManage/QueryCharge", respond_to({
+  app:match("player_query_charge", "/PlayerCenter/QueryCharge", respond_to({
     --
     before = function(self)
       auth(self, "any", self.route_name)
@@ -85,17 +113,17 @@ return function(app)
     --
     POST = capture_errors(function(self)
       validate.assert_valid(self.params, {
-        { "UserId", exists = true, min_length = 2, max_length = 50 },
+        { "UserName", exists = true, min_length = 2, max_length = 50 },
         { "BeginDate", optional=true, min_length = 10, max_length = 22 },
         { "EndDate", optional=true, min_length = 10, max_length = 22 },
       })
     
-      local PlayerManage = require("models.PlayerManage")
+      local PlayerCenter = require("models.PlayerCenter")
       
-      -- check userid 
-      local bExist = PlayerManage.checkUserId(self.params.UserId)
-      if not bExist then
-        assert_error(false, "UserId(" .. tostring(self.params.UserId) ..  ") not exist!!!")
+      -- check username
+      local userInfo = PlayerCenter.getUserInfo(self.params.UserName)
+      if not userInfo then
+        assert_error(false, "UserName(" .. tostring(self.params.UserName) ..  ") not exist!!!")
       end
 
       local d1 = date(false)
@@ -116,8 +144,9 @@ return function(app)
       end
 
       --
-      local data = PlayerManage.getPlayerCharge(self.params.UserId, begin_time, end_time)
+      local chargeLog = PlayerCenter.getChargeLog(userInfo.user_name, begin_time, end_time)
       
+      local data = chargeLog
       if data and self.session.user then
         self.success_infos = { "Success" }
         self.PlayerData = data

@@ -143,11 +143,11 @@ return function(app)
         end
       end
       
-      local PlayerManage = require("models.PlayerManage")
+      local PlayerCenter = require("models.PlayerCenter")
       
       -- check userid 
-      local bExist = PlayerManage.checkUserId(self.params.UserId)
-      if not bExist then
+      local userInfo = PlayerCenter.getUserInfo(self.params.UserId)
+      if not userInfo then
         assert_error(false, "UserId(" .. tostring(self.params.UserId) ..  ") not exist!!!")
       end
 
