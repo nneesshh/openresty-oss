@@ -63,12 +63,79 @@ function _M.getUserState(userId)
 end
 
 function _M.getChargeLog(userId, beginTime, endTime)
-local data = {}
-local h = model:new(oss_options)
-local col = h:getCol("user_charge")
-local r = col:find('{"user_name" : userId, { "charge_time" : { "$lt" = beginTime } } }')
-h:release()
-return model.getBsonVal(r)
+    local data = {}
+    local h = model:new(oss_options)
+    local col = h:getCol("user_charge")
+    local r = col:find('{"user_name" : userId, { "charge_time" : { "$lt" = beginTime } } }')
+    h:release()
+    return model.getBsonVal(r)
+end
+
+function _M.gm_addCoinByTicketId(ticketid, coinNum)
+    local data = {}
+    local h = model:new(oss_options)
+
+    local query = {
+        ticketid = ticketid
+    }
+    local update = {
+        ["$inc"] = {
+            coin = coinNum
+        }
+    }
+
+    local flags = {
+        multi = true
+    }
+
+    local col = h:getCol("user_info")
+    local r, err = col:update(query, update, flags)
+    h:release()
+    return r, err
+end
+
+function _M.gm_addCoinByUserName(username, coinNum)
+    local data = {}
+    local h = model:new(oss_options)
+
+    local query = {
+        user_name = username
+    }
+    local update = {
+        ["$inc"] = {
+            coin = coinNum
+        }
+    }
+
+    local flags = {
+        multi = true
+    }
+
+    local col = h:getCol("user_info")
+    local r, err = col:update(query, update, flags)
+    h:release()
+    return r, err
+end
+
+function _M.gm_addCoin(coinNum)
+    local data = {}
+    local h = model:new(oss_options)
+
+    local query = {}
+    local update = {
+        ["$inc"] = {
+            coin = coinNum
+        }
+    }
+
+    local flags = {
+        multi = true
+    }
+
+    local col = h:getCol("user_info")
+    local r, err = col:update(query, update, flags)
+    h:release()
+    return r, err
 end
 
 return _M

@@ -162,4 +162,62 @@ return function(app)
   end)
   }))
 
+  app:match("player_gm_add_coin", "/PlayerCenter/GMAddCoin", respond_to({
+    --
+    before = function(self)
+      auth(self, "any", self.route_name)
+    end,
+
+    GET = function(self)
+      --
+      return { render = "player.GMAddCoin", layout = false }
+    end,
+    
+    --
+    POST = capture_errors(function(self)
+      validate.assert_valid(self.params, {
+        { "UserTicketId", optional = true, is_integer = true, min_length = 7, max_length = 7 },
+        { "UserName", optional = true, min_length = 2, max_length = 50 },
+        { "CoinNum", exists = true, min_length = 1, max_length = 10 },
+      })
+    
+      local PlayerCenter = require("models.PlayerCenter")
+
+      local ticketid = tonumber(self.params.UserTicketId)
+      local username = self.params.UserName
+      local coinNum = tonumber(self.params.CoinNum)
+      
+      -- add coin
+      if ticketid then
+        local r, err = PlayerCenter.gm_addCoinByTicketId(ticketid, coinNum)
+        if r then
+          self.success_infos = { "Success" }
+          return { render = "player.GMAddCoin", layout = false }
+        else
+          assert_error(false, "[PlayerCenter.gm_addCoinByTicketId()] failed, err(" .. tostring(err) ..  ")!!!")
+        end
+      elseif username and #username > 6 then
+        local r, err = PlayerCenter.gm_addCoinByUserName(username, coinNum)
+        if r then
+          self.success_infos = { "Success" }
+          return { render = "player.GMAddCoin", layout = false }
+        else
+          assert_error(false, "[PlayerCenter.gm_addCoinByUserName()] failed, err(" .. tostring(err) ..  ")!!!")
+        end
+      else
+        local r, err = PlayerCenter.gm_addCoin(coinNum)
+        if r then
+          self.success_infos = { "Success" }
+          return { render = "player.GMAddCoin", layout = false }
+        else
+          assert_error(false, "[PlayerCenter.gm_addCoin()] failed, err(" .. tostring(err) ..  ")!!!")
+        end
+      end
+    end,
+    -- on_error
+    function(self)
+      return { render = "player.GMAddCoin", layout = false }
+  end)
+  }))
+
 end

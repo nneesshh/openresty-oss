@@ -32,16 +32,177 @@ db.getCollection("memberroles").insert(
 );
 
 db.getCollection("menus").insert(
-    {'Code': 'User',
-    'Icon': "fa fa-link",
-    'Name': "用户管理",
-    'ParentId': "00000000-0000-0000-0000-000000000000",
-    'Remarks': "",
-    'SeqNo': 3,
-    'Type': 0,
-    'Url': "/AdminUser",
-    'Hide': 1,
-    }
+    [
+        { 
+            "_id" : ObjectId("5c9c6a35b552003650898877"), 
+            "Code" : "User", 
+            "Icon" : "fa fa-link", 
+            "Name" : "用户管理", 
+            "ParentId" : "00000000-0000-0000-0000-000000000000", 
+            "Remarks" : "", 
+            "SeqNo" : NumberInt(3), 
+            "Type" : NumberInt(0), 
+            "Url" : "/AdminUser", 
+            "Hide" : NumberInt(1)
+        },
+        { 
+            "_id" : ObjectId("5c9c6a35b552003650898878"), 
+            "Code" : "GamePlayer", 
+            "Icon" : "fa fa-link", 
+            "Name" : "游戏玩家数据查询", 
+            "ParentId" : "00000000-0000-0000-0000-000000000000", 
+            "Remarks" : "", 
+            "SeqNo" : NumberInt(7), 
+            "Type" : NumberInt(0), 
+            "Url" : "/PlayerCenter", 
+            "Hide" : NumberInt(0)
+        },
+        { 
+            "_id" : ObjectId("5c9c6a35b552003650898879"), 
+            "Code" : "Role", 
+            "Icon" : "fa fa-link", 
+            "Name" : "角色管理", 
+            "ParentId" : "00000000-0000-0000-0000-000000000000", 
+            "Remarks" : "", 
+            "SeqNo" : NumberInt(2), 
+            "Type" : NumberInt(0), 
+            "Url" : "/AdminRole", 
+            "Hide" : NumberInt(1)
+        },
+        { 
+            "_id" : ObjectId("5c9c6a35b55200365089887a"), 
+            "Code" : "GameQuest", 
+            "Icon" : "fa fa-link", 
+            "Name" : "任务统计", 
+            "ParentId" : "00000000-0000-0000-0000-000000000000", 
+            "Remarks" : "", 
+            "SeqNo" : NumberInt(13), 
+            "Type" : NumberInt(1), 
+            "Url" : "/StatsUserQuest", 
+            "Hide" : NumberInt(1)
+        },
+        { 
+            "_id" : ObjectId("5c9c6a35b55200365089887b"), 
+            "Code" : "Department", 
+            "Icon" : "fa fa-link", 
+            "Name" : "组织机构管理", 
+            "ParentId" : "00000000-0000-0000-0000-000000000000", 
+            "Remarks" : "", 
+            "SeqNo" : NumberInt(1), 
+            "Type" : NumberInt(0), 
+            "Url" : "/AdminDepartment", 
+            "Hide" : NumberInt(1)
+        },
+        { 
+            "_id" : ObjectId("5c9c6a35b55200365089887c"), 
+            "Code" : "Charge", 
+            "Icon" : "fa fa-link", 
+            "Name" : "充值统计", 
+            "ParentId" : "00000000-0000-0000-0000-000000000000", 
+            "Remarks" : "", 
+            "SeqNo" : NumberInt(12), 
+            "Type" : NumberInt(1), 
+            "Url" : "/StatsUserCharge", 
+            "Hide" : NumberInt(0)
+        },
+        { 
+            "_id" : ObjectId("5c9c6a35b55200365089887d"), 
+            "Code" : "Online", 
+            "Icon" : "fa fa-link", 
+            "Name" : "在线统计", 
+            "ParentId" : "00000000-0000-0000-0000-000000000000", 
+            "Remarks" : "", 
+            "SeqNo" : NumberInt(14), 
+            "Type" : NumberInt(1), 
+            "Url" : "/StatsUserOnline", 
+            "Hide" : NumberInt(0)
+        },
+        { 
+            "_id" : ObjectId("5c9c6a35b55200365089887e"), 
+            "Code" : "Diamond", 
+            "Icon" : "fa fa-link", 
+            "Name" : "钻石消费", 
+            "ParentId" : "00000000-0000-0000-0000-000000000000", 
+            "Remarks" : null, 
+            "SeqNo" : NumberInt(11), 
+            "Type" : NumberInt(1), 
+            "Url" : "/StatsUserDiamond", 
+            "Hide" : NumberInt(0)
+        },
+        { 
+            "_id" : ObjectId("5c9c6a35b55200365089887f"), 
+            "Code" : "News", 
+            "Icon" : "fa fa-link", 
+            "Name" : "更新公告管理", 
+            "ParentId" : "00000000-0000-0000-0000-000000000000", 
+            "Remarks" : "", 
+            "SeqNo" : NumberInt(4), 
+            "Type" : NumberInt(0), 
+            "Url" : "/AdminNews", 
+            "Hide" : NumberInt(0)
+        },
+        { 
+            "_id" : ObjectId("5c9c6a35b552003650898880"), 
+            "Code" : "GameAnnouncement", 
+            "Icon" : "fa fa-link", 
+            "Name" : "GM公告管理", 
+            "ParentId" : "00000000-0000-0000-0000-000000000000", 
+            "Remarks" : "", 
+            "SeqNo" : NumberInt(5), 
+            "Type" : NumberInt(0), 
+            "Url" : "/AdminGameAnnouncement", 
+            "Hide" : NumberInt(0)
+        },
+        { 
+            "_id" : ObjectId("5c9c6a35b552003650898881"), 
+            "Code" : "Mail", 
+            "Icon" : "fa fa-link", 
+            "Name" : "GM邮件管理", 
+            "ParentId" : "00000000-0000-0000-0000-000000000000", 
+            "Remarks" : "", 
+            "SeqNo" : NumberInt(6), 
+            "Type" : NumberInt(0), 
+            "Url" : "/AdminMail", 
+            "Hide" : NumberInt(0)
+        },
+        { 
+            "_id" : ObjectId("5c9c6a35b552003650898882"), 
+            "Code" : "OnlineHour", 
+            "Icon" : "fa fa-link", 
+            "Name" : "小时在线", 
+            "ParentId" : "00000000-0000-0000-0000-000000000000", 
+            "Remarks" : "", 
+            "SeqNo" : NumberInt(15), 
+            "Type" : NumberInt(1), 
+            "Url" : "/StatsUserOnlineHour", 
+            "Hide" : NumberInt(0)
+        },
+        { 
+            "_id" : ObjectId("5c9c6a35b552003650898883"), 
+            "Code" : "OnlineSnapshot", 
+            "Icon" : "fa fa-link", 
+            "Name" : "当前在线", 
+            "ParentId" : "00000000-0000-0000-0000-000000000000", 
+            "Remarks" : "", 
+            "SeqNo" : NumberInt(16), 
+            "Type" : NumberInt(1), 
+            "Url" : "/StatsUserOnlineSnapshot", 
+            "Hide" : NumberInt(0)
+        },
+        { 
+            "_id" : ObjectId("5c9c6a35b552003650898884"), 
+            "Code" : "Retention", 
+            "Icon" : "fa fa-link", 
+            "Name" : "留存率统计", 
+            "ParentId" : "00000000-0000-0000-0000-000000000000", 
+            "Remarks" : "", 
+            "SeqNo" : NumberInt(17), 
+            "Type" : NumberInt(1), 
+            "Url" : "/StatsUserRetention", 
+            "Hide" : NumberInt(0)
+        }
+        
+    ]
 );
 
 db.getCollection("rolemenus").insert(
@@ -60,8 +221,8 @@ db.getCollection("roles").insert(
 );
 
 db.getCollection("userroles").insert(
-    {'UserId': '00000000-0000-0000-0000-000000000000',
-    'RoleId': "00000000-0000-0000-0000-000000000000",
+    {'UserId': 'admin',
+    'RoleId': 'any',
     }
 );
 

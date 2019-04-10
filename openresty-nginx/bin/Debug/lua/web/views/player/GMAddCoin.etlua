@@ -1,0 +1,95 @@
+﻿<%
+    local date = require("date")
+    local now = date(false);
+
+    local createBy
+    if session.user then
+        createBy = session.user.Name
+    end
+
+    local userTicketId, userName, coinNum
+    if params then
+        userTicketId = params.UserTicketId
+        userName = params.UserName
+        coinNum = params.CoinNum
+    end
+%>
+
+<script type="text/javascript">
+    function _do_ajax_submit_gm_add_coin_PlayerCenterForm() {
+        
+        $("#successInfo").empty();
+
+        var option = {
+            url : '/PlayerCenter/GMAddCoin',
+            type : 'POST',
+            dataType: 'html',
+            //headers: { "ClientCallMode" : "ajax" }, //添加请求头部
+            success: function(data) {
+                $("#_ajax_call_result").html(data);
+            },
+            error: function(xmlhr, textStatus, errorThrown) {
+                alert("failed!!! xmlhr.status=" + xmlhr.status + 
+                        ", xmlhr.readyState=" + xmlhr.readyState + 
+                        ", textStatus=" + textStatus + 
+                        ", errorThrown=" + errorThrown);
+            },
+        };
+        $("#playerCenterForm").ajaxSubmit(option);
+        return false; //最好返回false，因为如果按钮类型是submit,则表单自己又会提交一次;返回false阻止表单再次提交
+    };
+
+</script>
+
+<!-- render body -->
+<div class="row">
+
+    <div class="center-block" style="width:600px;margin:0 auto">
+        <% if errors then %>
+        <div class="form-group">
+            <div class="text-danger"><%= errors[1] %></div>
+        </div>
+        <% end %>
+
+        <% if success_infos then %>
+        <div class="form-group">
+            <div id="successInfo" class="text-success"><%= success_infos[1] %></div>
+        </div>
+        <% end %>
+    </div>
+
+    <!-- query button -->
+    <div class="col-sm-12">
+        <form class="form-horizontal" role="form" id="playerCenterForm">
+            <div class="form-group">
+                <label class="col-sm-2 control-label" style="width:200px;">输入玩家7位数字ID:</label>
+                <div class="col-sm-4">
+                    <input style="width:200px;" type="text" id="userTickedId" name="UserTicketId" value="<%= userTicketId or '' %>" />
+                </div>
+        
+                <div class="clearfix" style="margin-bottom: 10px;"></div><!-- 清除浮动 -->
+        
+                <label class="col-sm-2 control-label" style="width:200px;">输入玩家账号名称:</label>
+                <div class="col-sm-4">
+                    <input style="width:200px;" type="text" id="userName" name="UserName" value="<%= userName or '' %>" />
+                </div>
+        
+                <div class="clearfix" style="margin-bottom: 10px;"></div><!-- 清除浮动 -->
+
+                <label class="col-sm-2 control-label" style="width:200px;">输入金额:</label>
+                <div class="col-sm-4">
+                    <input style="width:230px;" type="text" id="coinNum" name="CoinNum" value="<%= coinNum or '10000' %>" />
+                </div>
+                <div class="col-sm-2 ">
+                    <a class="btn btn-primary" style="width:100px;" href="javascript:void(0)" onclick="_do_ajax_submit_gm_add_coin_PlayerCenterForm()">增加</a>
+                </div>
+            </div>
+        </form>
+    </div> 
+   
+</div>
+<!-- /.row -->
+
+<div>
+    <a class="btn-lg" href="javascript:void(0)" onclick="_do_ajax_call_GamePlayer()">返回</a>
+</div>

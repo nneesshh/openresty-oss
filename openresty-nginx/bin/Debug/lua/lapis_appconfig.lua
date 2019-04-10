@@ -9,9 +9,7 @@ _M._config(
     {
         --[[mysql = {
             host = "127.0.0.1",
-            -- host = "192.168.1.213",
             -- host = "192.168.1.110",
-            -- host = "192.168.1.10",
             user = "root",
             password = "123123",
             database = "my_umb_web"
