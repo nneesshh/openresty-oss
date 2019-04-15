@@ -138,4 +138,27 @@ function _M.gm_addCoin(coinNum)
     return r, err
 end
 
+function _M.gm_adjustNegtiveCoin(toCoinNum)
+    local data = {}
+    local h = model:new(oss_options)
+
+    local query = {
+        coin = { ["$lt"] = 0 }
+    }
+    local update = {
+        ["$set"] = {
+            coin = toCoinNum
+        }
+    }
+
+    local flags = {
+        multi = true
+    }
+
+    local col = h:getCol("user_info")
+    local r, err = col:update(query, update, flags)
+    h:release()
+    return r, err
+end
+
 return _M

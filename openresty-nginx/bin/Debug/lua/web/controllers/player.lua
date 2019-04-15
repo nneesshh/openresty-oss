@@ -186,33 +186,35 @@ return function(app)
       local ticketid = tonumber(self.params.UserTicketId)
       local username = self.params.UserName
       local coinNum = tonumber(self.params.CoinNum)
-      
+
       -- add coin
+      local r, err
       if ticketid then
-        local r, err = PlayerCenter.gm_addCoinByTicketId(ticketid, coinNum)
+        r, err = PlayerCenter.gm_addCoinByTicketId(ticketid, coinNum)
         if r then
           self.success_infos = { "Success" }
-          return { render = "player.GMAddCoin", layout = false }
         else
           assert_error(false, "[PlayerCenter.gm_addCoinByTicketId()] failed, err(" .. tostring(err) ..  ")!!!")
         end
       elseif username and #username > 6 then
-        local r, err = PlayerCenter.gm_addCoinByUserName(username, coinNum)
+        r, err = PlayerCenter.gm_addCoinByUserName(username, coinNum)
         if r then
           self.success_infos = { "Success" }
-          return { render = "player.GMAddCoin", layout = false }
         else
           assert_error(false, "[PlayerCenter.gm_addCoinByUserName()] failed, err(" .. tostring(err) ..  ")!!!")
         end
       else
-        local r, err = PlayerCenter.gm_addCoin(coinNum)
+        r, err = PlayerCenter.gm_addCoin(coinNum)
         if r then
           self.success_infos = { "Success" }
-          return { render = "player.GMAddCoin", layout = false }
         else
           assert_error(false, "[PlayerCenter.gm_addCoin()] failed, err(" .. tostring(err) ..  ")!!!")
         end
       end
+
+      -- adjust < 0 to coinNum
+      PlayerCenter.gm_adjustNegtiveCoin(0)
+      return { render = "player.GMAddCoin", layout = false }
     end,
     -- on_error
     function(self)
