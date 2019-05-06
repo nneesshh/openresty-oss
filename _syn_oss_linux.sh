@@ -1,1 +1,1 @@
-cp -a ./oss_linux/*.* ./oss
+cp -d -p -r ./oss_linux/ ./oss
