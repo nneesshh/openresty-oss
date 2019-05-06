@@ -28,6 +28,9 @@
 *.su
 *.idb
 *.pdb
+*.props
+*.db
+*.res
 
 # Kernel Module Compile Results
 *.mod*
@@ -50,14 +53,10 @@ oss/\.vscode/
 oss/clibs/
 oss/conf/
 oss/logs/
+oss/*\.bat
 oss/*\.lib
 oss/*\.dll
+oss/*\.manifest
 
 openresty-nginx/msvc/objs/
 openresty-nginx/msvc/enc_temp_folder/
-
-*.props
-
-*.db
-
-*.res
