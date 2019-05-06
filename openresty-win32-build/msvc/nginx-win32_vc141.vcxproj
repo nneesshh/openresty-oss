@@ -49,7 +49,7 @@
     <TargetName>nginx</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>../bin/__publish/</OutDir>
+    <OutDir>../bin/$(Configuration)/</OutDir>
     <IntDir>objs/$(Configuration)/vc141/</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <TargetName>nginx</TargetName>

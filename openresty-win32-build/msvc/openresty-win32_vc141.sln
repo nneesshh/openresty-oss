@@ -7,8 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nginx-win32_vc141", "nginx-
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "luajit", "..\bundle\LuaJIT-2.1-20181029\BUILD\luajit.vcxproj", "{8C0F0B9E-6C66-304B-9351-4C3BBD03FE0F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cjson", "..\bundle\lua-cjson-2.1.0.7rc1\BUILD\cjson.vcxproj", "{44DFA78A-BE69-3F6D-812B-5736BB6AF9F0}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "luajit-bin", "..\bundle\LuaJIT-2.1-20181029\BUILD\luajit-bin.vcxproj", "{058FDF6A-C69D-34B3-A00F-F69A43DABCF8}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "luaossl", "..\bundle\luaossl-rel-20180530\build\luaossl.vcxproj", "{D7CC48BC-3071-49D3-96F7-9E90FCEA0207}"
@@ -27,10 +25,6 @@ Global
 		{8C0F0B9E-6C66-304B-9351-4C3BBD03FE0F}.Debug|x86.Build.0 = Debug|Win32
 		{8C0F0B9E-6C66-304B-9351-4C3BBD03FE0F}.Release|x86.ActiveCfg = Release|Win32
 		{8C0F0B9E-6C66-304B-9351-4C3BBD03FE0F}.Release|x86.Build.0 = Release|Win32
-		{44DFA78A-BE69-3F6D-812B-5736BB6AF9F0}.Debug|x86.ActiveCfg = Debug|Win32
-		{44DFA78A-BE69-3F6D-812B-5736BB6AF9F0}.Debug|x86.Build.0 = Debug|Win32
-		{44DFA78A-BE69-3F6D-812B-5736BB6AF9F0}.Release|x86.ActiveCfg = Release|Win32
-		{44DFA78A-BE69-3F6D-812B-5736BB6AF9F0}.Release|x86.Build.0 = Release|Win32
 		{058FDF6A-C69D-34B3-A00F-F69A43DABCF8}.Debug|x86.ActiveCfg = Debug|Win32
 		{058FDF6A-C69D-34B3-A00F-F69A43DABCF8}.Debug|x86.Build.0 = Debug|Win32
 		{058FDF6A-C69D-34B3-A00F-F69A43DABCF8}.Release|x86.ActiveCfg = Release|Win32
