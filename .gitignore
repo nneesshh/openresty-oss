@@ -45,10 +45,13 @@ dkms.conf
 *.log
 *.user
 
-.vs/
+\.vs/
 oss/\.vscode/
+oss/clibs/
+oss/conf/
 oss/logs/
-oss/static_sample/
+oss/*\.lib
+oss/*\.dll
 
 openresty-nginx/msvc/objs/
 openresty-nginx/msvc/enc_temp_folder/
