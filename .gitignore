@@ -57,6 +57,7 @@ oss/*\.bat
 oss/*\.lib
 oss/*\.dll
 oss/*\.manifest
+oss/*\.chm
 
 openresty-nginx/msvc/objs/
 openresty-nginx/msvc/enc_temp_folder/
