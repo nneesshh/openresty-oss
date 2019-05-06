@@ -53,6 +53,7 @@ oss/\.vscode/
 oss/clibs/
 oss/conf/
 oss/logs/
+oss/temp/
 oss/*\.bat
 oss/*\.lib
 oss/*\.dll
