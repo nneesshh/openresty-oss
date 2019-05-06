@@ -12,12 +12,6 @@ local DEBUG = ngx.DEBUG
 --
 require = require("utils.require").require
 
--- common
-package.path = package.path .. ";./?.lua;./lua/?.lua;./lua/?/init.lua"
-package.path = package.path .. ";./lualibs/?.lua;./lualibs/?/init.lua"
-package.path = package.path .. ";./src/?.lua;./src/?/init.lua"
-package.cpath = package.cpath .. ";./?.dll;./clibs/?.dll"
-
 -- lapis
 package.path = package.path .. ";./lualibs/lapis-1.7.0/?.lua;./lualibs/lapis-1.7.0/?/init.lua"
 package.path = package.path .. ";./lualibs/loadkit-1.1.0/?.lua"
@@ -37,9 +31,6 @@ package.path = package.path .. ";./lualibs/lua-resty-mongol-master/lib/?.lua;./l
 
 -- date
 package.path = package.path .. ";./lualibs/luadate-2.1/?.lua"
-
--- protobuf
-package.path = package.path .. ";./lualibs/protobuf/?.lua"
 
 --
 require("uuid")
