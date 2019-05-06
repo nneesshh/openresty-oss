@@ -1,1 +1,1 @@
-cp -d -p -r ./oss/ /home/www/oss/
+\cp -rfv ./oss/* /home/www/oss/
