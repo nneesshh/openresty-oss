@@ -1,5 +1,0 @@
-{
-    "*.etlua": "html",
-    "*.js": "html",
-    "*.vue": "html"
-}
