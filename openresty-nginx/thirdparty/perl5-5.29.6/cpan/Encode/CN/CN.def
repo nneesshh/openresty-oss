@@ -1,4 +1,0 @@
-LIBRARY "CN"
-EXPORTS
-  boot_Encode__CN
-  

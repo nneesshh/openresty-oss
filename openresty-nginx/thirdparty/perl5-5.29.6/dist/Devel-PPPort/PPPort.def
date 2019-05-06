@@ -1,4 +1,0 @@
-LIBRARY "PPPort"
-EXPORTS
-  boot_Devel__PPPort
-  

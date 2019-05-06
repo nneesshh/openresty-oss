@@ -1,4 +1,0 @@
-LIBRARY "Peek"
-EXPORTS
-  boot_Devel__Peek
-  

@@ -1,0 +1,4 @@
+LIBRARY "POSIX"
+EXPORTS
+  boot_POSIX
+  

@@ -1,4 +1,0 @@
-LIBRARY "Socket"
-EXPORTS
-  boot_Socket
-  

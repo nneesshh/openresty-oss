@@ -1,4 +1,0 @@
-LIBRARY "mmap"
-EXPORTS
-  boot_PerlIO__mmap
-  

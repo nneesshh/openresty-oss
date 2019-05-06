@@ -1,0 +1,4 @@
+LIBRARY "Storable"
+EXPORTS
+  boot_Storable
+  

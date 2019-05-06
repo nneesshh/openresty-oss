@@ -1,0 +1,4 @@
+LIBRARY "SHA"
+EXPORTS
+  boot_Digest__SHA
+  

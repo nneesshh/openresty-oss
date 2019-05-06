@@ -1,0 +1,4 @@
+LIBRARY "shared"
+EXPORTS
+  boot_threads__shared
+  

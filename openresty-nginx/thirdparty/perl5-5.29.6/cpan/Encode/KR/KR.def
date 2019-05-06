@@ -1,4 +1,0 @@
-LIBRARY "KR"
-EXPORTS
-  boot_Encode__KR
-  

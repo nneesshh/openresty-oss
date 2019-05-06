@@ -1,4 +1,0 @@
-LIBRARY "IO"
-EXPORTS
-  boot_IO
-  

@@ -1,4 +1,0 @@
-LIBRARY "Fcntl"
-EXPORTS
-  boot_Fcntl
-  

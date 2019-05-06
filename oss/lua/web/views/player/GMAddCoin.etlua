@@ -1,4 +1,4 @@
-﻿<%
+<%
     local date = require("date")
     local now = date(false);
 

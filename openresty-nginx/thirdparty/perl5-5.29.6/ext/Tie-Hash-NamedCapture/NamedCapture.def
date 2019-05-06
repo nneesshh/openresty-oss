@@ -1,4 +1,0 @@
-LIBRARY "NamedCapture"
-EXPORTS
-  boot_Tie__Hash__NamedCapture
-  

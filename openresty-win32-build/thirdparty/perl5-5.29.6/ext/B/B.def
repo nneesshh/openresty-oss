@@ -1,0 +1,4 @@
+LIBRARY "B"
+EXPORTS
+  boot_B
+  

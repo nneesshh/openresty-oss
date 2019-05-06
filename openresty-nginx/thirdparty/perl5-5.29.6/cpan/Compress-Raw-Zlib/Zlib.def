@@ -1,4 +1,0 @@
-LIBRARY "Zlib"
-EXPORTS
-  boot_Compress__Raw__Zlib
-  

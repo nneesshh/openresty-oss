@@ -1,4 +1,0 @@
-LIBRARY "Normalize"
-EXPORTS
-  boot_Unicode__Normalize
-  

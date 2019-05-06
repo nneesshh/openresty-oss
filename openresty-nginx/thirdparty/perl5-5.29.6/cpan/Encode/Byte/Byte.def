@@ -1,4 +1,0 @@
-LIBRARY "Byte"
-EXPORTS
-  boot_Encode__Byte
-  

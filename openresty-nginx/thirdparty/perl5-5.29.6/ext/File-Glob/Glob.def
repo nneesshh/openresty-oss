@@ -1,4 +1,0 @@
-LIBRARY "Glob"
-EXPORTS
-  boot_File__Glob
-  

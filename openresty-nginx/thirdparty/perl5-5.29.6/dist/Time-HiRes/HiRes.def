@@ -1,4 +1,0 @@
-LIBRARY "HiRes"
-EXPORTS
-  boot_Time__HiRes
-  

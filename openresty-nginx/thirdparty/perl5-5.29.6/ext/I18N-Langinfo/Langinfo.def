@@ -1,4 +1,0 @@
-LIBRARY "Langinfo"
-EXPORTS
-  boot_I18N__Langinfo
-  

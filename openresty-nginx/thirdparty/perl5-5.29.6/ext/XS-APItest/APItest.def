@@ -1,4 +1,0 @@
-LIBRARY "APItest"
-EXPORTS
-  boot_XS__APItest
-  

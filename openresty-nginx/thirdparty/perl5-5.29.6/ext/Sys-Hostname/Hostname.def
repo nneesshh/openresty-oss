@@ -1,4 +1,0 @@
-LIBRARY "Hostname"
-EXPORTS
-  boot_Sys__Hostname
-  

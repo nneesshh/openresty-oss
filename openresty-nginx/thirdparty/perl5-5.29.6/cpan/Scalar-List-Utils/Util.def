@@ -1,4 +1,0 @@
-LIBRARY "Util"
-EXPORTS
-  boot_List__Util
-  

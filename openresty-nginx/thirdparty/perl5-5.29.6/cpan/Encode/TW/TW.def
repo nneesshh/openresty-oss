@@ -1,4 +1,0 @@
-LIBRARY "TW"
-EXPORTS
-  boot_Encode__TW
-  

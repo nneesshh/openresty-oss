@@ -1,0 +1,4 @@
+LIBRARY "threads"
+EXPORTS
+  boot_threads
+  

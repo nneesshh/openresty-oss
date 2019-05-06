@@ -1,0 +1,4 @@
+LIBRARY "Win32"
+EXPORTS
+  boot_Win32
+  

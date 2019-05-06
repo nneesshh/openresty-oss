@@ -1,0 +1,4 @@
+LIBRARY "Base64"
+EXPORTS
+  boot_MIME__Base64
+  

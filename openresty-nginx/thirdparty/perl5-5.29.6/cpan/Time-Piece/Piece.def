@@ -1,4 +1,0 @@
-LIBRARY "Piece"
-EXPORTS
-  boot_Time__Piece
-  

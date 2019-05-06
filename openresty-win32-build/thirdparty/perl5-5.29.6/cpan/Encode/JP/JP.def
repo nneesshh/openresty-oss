@@ -1,0 +1,4 @@
+LIBRARY "JP"
+EXPORTS
+  boot_Encode__JP
+  

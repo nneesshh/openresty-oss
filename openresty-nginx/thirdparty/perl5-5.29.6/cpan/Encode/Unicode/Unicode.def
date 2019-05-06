@@ -1,4 +1,0 @@
-LIBRARY "Unicode"
-EXPORTS
-  boot_Encode__Unicode
-  
