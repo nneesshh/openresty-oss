@@ -1,5 +1,5 @@
-// use zjhdb
-db.getSiblingDB("zjhdb");
+// use my_umb_web
+db = db.getSiblingDB("my_umb_web");
 
 db.getCollection("departments").insert(
     {'Code': null,
