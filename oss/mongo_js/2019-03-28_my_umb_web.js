@@ -1,3 +1,6 @@
+// use zjhdb
+db.getSiblingDB("zjhdb");
+
 db.getCollection("departments").insert(
     {'Code': null,
     'ContactNumber': null,
