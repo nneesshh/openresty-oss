@@ -18,7 +18,6 @@ _M._config(
         },]]
         mongodb = {
             host = "192.168.209.129",
-            --host = "192.168.200.101",
             port = 27017,
             database = "my_umb_web"
         },

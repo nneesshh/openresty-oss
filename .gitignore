@@ -52,6 +52,7 @@ dkms.conf
 oss/\.vscode/
 oss/clibs/
 oss/conf/
+oss/lapis_env/
 oss/logs/
 oss/temp/
 oss/*\.bat
