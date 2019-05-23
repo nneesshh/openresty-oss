@@ -16,7 +16,7 @@ local validate = require("lapis.validate")
 local auth = require(cwd .. "authorize")
 
 return function(app)
-  app:match("admin_game_announcement", "/AdminGameAnnouncement", respond_to({
+  app:match("admin_announcement", "/AdminGameAnnouncement", respond_to({
     --
     before = function(self)
       auth(self, "any", self.route_name)
@@ -35,7 +35,7 @@ return function(app)
 
   }))
 
-  app:match("admin_game_announcement_create", "/AdminGameAnnouncement/Create", respond_to({
+  app:match("admin_announcement_create", "/AdminGameAnnouncement/Create", respond_to({
     --
     before = function(self)
       auth(self, "any", self.route_name)
@@ -74,14 +74,15 @@ return function(app)
         play_interval = "30"
       end
       
+      --[[
       local GameAnnouncement = require("models.GameAnnouncement")
       
       local obj = GameAnnouncement.create(deadline_time, play_interval, self.params.Content)
       if obj and self.session.user then
-        return { redirect_to = self:url_for("admin_game_announcement") }
+        return { redirect_to = self:url_for("admin_announcement") }
       else
         --assert_error(false, "xxxx错误!")
-      end
+      end]]
     end,
     -- on_error
     function(self)

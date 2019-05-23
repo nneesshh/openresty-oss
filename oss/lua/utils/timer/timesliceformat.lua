@@ -289,15 +289,15 @@ local function __addFormat(self, beginTime, endTime)
     end
 
     --
-    slice.desc = str_format("%s ~ %s", slice.begin_time_desc, slice.end_time_desc)
+    slice.desc = str_format("%s-%s", slice.begin_time_desc, slice.end_time_desc)
 
     --
     tbl_insert(self.sliceList, slice)
     return slice
 end
 
--- params : fmt:addFormat("23:30", 60) // slice 23:30:00 ~ 23:31:00
---          or fmt:addFormat("23:30", "23:31") // slice 23:30:00 ~ 23:31:00
+-- params : fmt:addFormat("23:30", 60) // slice 23:30:00-23:31:00
+--          or fmt:addFormat("23:30", "23:31") // slice 23:30:00-23:31:00
 --          or fmt:addFormat({{p1, p2}})
 function _M:addFormat(beginTime, endTime)
 

@@ -32,19 +32,19 @@ local wheel = timermanager._wheel
 local _M = {}
 local mt = {__index = _M}
 
-local TIMESLICER_STATE_IDLE = 1
-local TIMESLICER_STATE_TICKING = 2
+local TIME_SLICER_STATE_IDLE = 1
+local TIME_SLICER_STATE_TICKING = 2
 
 function _M.new(name, format)
     local self = {
-        name = name or "timeslicer",
+        name = name or "TIME_SLICER",
         format = format,
         timer = {wheelid = false},
         slicePointer = 0,
         cycle = false,
         beginCb = false,
         endCb = false,
-        state = TIMESLICER_STATE_IDLE
+        state = TIME_SLICER_STATE_IDLE
     }
     return setmetatable(self, mt)
 end
@@ -59,7 +59,7 @@ local function __fireBeginEvent(self, slice, tmNow)
     --
     local cb = function(arg, wnow)
         local slicer = arg.slicer
-        slicer.state = TIMESLICER_STATE_IDLE
+        slicer.state = TIME_SLICER_STATE_IDLE
         slicer:onBegin(slice, wnow)
     end
 
@@ -69,7 +69,7 @@ local function __fireBeginEvent(self, slice, tmNow)
     }
 
     --
-    self.state = TIMESLICER_STATE_TICKING
+    self.state = TIME_SLICER_STATE_TICKING
 
     --
     local beginTime = self:getSliceBeginTimeByCycle(slice, self.cycle)
@@ -81,7 +81,7 @@ local function __fireEndEvent(self, slice, tmNow)
     --
     local cb = function(arg, wnow)
         local slicer = arg.slicer
-        slicer.state = TIMESLICER_STATE_IDLE
+        slicer.state = TIME_SLICER_STATE_IDLE
         slicer:onEnd(slice, wnow)
     end
 
@@ -91,7 +91,7 @@ local function __fireEndEvent(self, slice, tmNow)
     }
 
     --
-    self.state = TIMESLICER_STATE_TICKING
+    self.state = TIME_SLICER_STATE_TICKING
 
     --
     local endTime = self:getSliceEndTimeByCycle(slice, self.cycle)
@@ -135,13 +135,13 @@ function _M:startTick(beginCb, endCb)
 
         --warning -- invalid format
         local desc =
-            str_format("\n[timeslicer:startTick()] name(%s), format is invalid, start tick failed!!!\n", self.name)
+            str_format("\n[TIME_SLICER:startTick()] name(%s), format is invalid, start tick failed!!!\n", self.name)
         print(desc)
         --error(desc)
     else
         -- warning -- empty slice list
         local desc =
-            str_format("\n[timeslicer:startTick()] name(%s), slice list is empty, start tick failed!!!\n", self.name)
+            str_format("\n[TIME_SLICER:startTick()] name(%s), slice list is empty, start tick failed!!!\n", self.name)
         print(desc)
         --error(desc)
     end
@@ -153,13 +153,13 @@ function _M:stopTick()
         __clearEvent(self)
 
         --//
-        self.state = TIMESLICER_STATE_IDLE
+        self.state = TIME_SLICER_STATE_IDLE
     end
 end
 
 --
 function _M:isTicking()
-    return TIMESLICER_STATE_TICKING == self.state
+    return TIME_SLICER_STATE_TICKING == self.state
 end
 
 --
