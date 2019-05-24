@@ -32,6 +32,10 @@ package.path = package.path .. ";/home/www/oss/lualibs/lua-resty-mongol-master/l
 -- date
 package.path = package.path .. ";/home/www/oss/lualibs/luadate-2.1/?.lua"
 
+-- print package path
+print("\n======== package.path ========\n" .. package.path)
+print("\n======== package.cpath ========\n" .. package.cpath)
+
 --
 require("uuid")
 

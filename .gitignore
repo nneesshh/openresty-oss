@@ -61,3 +61,4 @@ oss/*\.chm
 
 openresty-nginx/msvc/objs/
 openresty-nginx/msvc/enc_temp_folder/
+oss/logs/nginx\.pid
