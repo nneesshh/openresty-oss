@@ -12,6 +12,7 @@ local _M = {
 
 function _M.create()
     local h = model:new(default_options)
+    local col = h:getCol(_M.colName)
 
     h:release()
 end

@@ -1,5 +1,6 @@
 local mongo = require("mongo")
 local new_object_id = mongo.ObjectId
+local new_object_id_from_data = mongo.ObjectIdFromData
 local bit = require("bit")
 local bnot, band, bor, bxor = bit.bnot, bit.band, bit.bor, bit.bxor
 local lshift, rshift, arshift, rol = bit.lshift, bit.rshift, bit.arshift, bit.rol
@@ -28,22 +29,32 @@ function _M.encryptTicketId7(id)
     return sid
 end
 
-function _M.newObid(str12OrNil)
-    return new_object_id(str12OrNil)
+function _M.newObid(str24OrNil)
+    return new_object_id(str24OrNil)
+end
+
+function _M.newObidFromData(str12OrNil)
+    return new_object_id_from_data(str12OrNil)
+end
+
+function _M.obidSafe(bval)
+    -- convert obid to string for session json serialize
+    if bval then
+        if type(bval._id) == "userdata" then
+            bval._obid = bval._id:data()
+            bval._id= tostring(bval._id)
+        end
+    end
+    return bval
 end
 
 function _M.getBsonVal(bsonObj)
     return bsonObj and bsonObj:value()
 end
 
-function _M.getBsonValSafe(bsonObj)
+function _M.bsonObidSafe(bsonObj)
     local bval = _M.getBsonVal(bsonObj)
-    if bval and type(bval._id) == "userdata" then
-        -- convert obid to string for session json serialize
-        bval._obid = tostring(bval._id)
-        bval._id = bval._id:data()
-    end
-    return bval
+    return _M.obidSafe(bval)
 end
 
 --

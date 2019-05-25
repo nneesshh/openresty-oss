@@ -1,43 +1,91 @@
-local Model = require("lapis.db.model").Model
-local schema = require("lapis.db.schema")
-local types = schema.types
-
-local uuid = require("uuid")
+local tostring = tostring
+local tbl_insert = table.insert
 
 -- Localize
-local cwd = (...):gsub('%.[^%.]+$', '') .. "."
-local default_options = require("db.default_mysql_options")
+local cwd = (...):gsub("%.[^%.]+$", "") .. "."
+local oss_options = require(cwd .. "GameDbUrls").getOptions()
+local model = require(cwd .. "MongoModel")
 
 local _M = {
-  _db_entity = Model:extend(require(cwd .. "GameDbUrls").getOptions(), "_oss_news", {
-    primary_key = "Id"
-  }),
+    colName = "game_news"
 }
 
-function _M.create() 
-  local res, err = _M._db_entity:create({
-    Id  = uuid.generate(),
-  })
-  assert(res, err)
-  return res
+function _M.create(content, createby, createtime)
+    -- insertFlags: continueOnError, noValidate
+    local h = model:new(oss_options)
+    local col = h:getCol(_M.colName)
+    col:insert({
+      content = content,
+      createby = createby,
+      createtime = createtime,
+    })
+    h:release()
 end
 
-function _M.update(obj) 
-  local res, err = obj:update("CreateBy", "CreateTime", "Content")
-  assert(res, err)
+function _M.update(obj)
+    -- updateFlags: upsert, multi, noValidate
+    local data = {}
+    local h = model:new(oss_options)
+
+    local query = {
+        _id = obj._id
+    }
+    local update = {
+        ["$set"] = {
+          content = obj.content,
+          createby = obj.createby,
+          createtime = obj.createtime,
+        }
+    }
+
+    local flags = {
+        multi = false
+    }
+
+    local col = h:getCol(_M.colName)
+    local r, err = col:update(query, update, flags)
+    h:release()
+    return r, err
 end
 
-function _M.delete(obj) 
-  local res, err = obj:delete(obj)
-  assert(res, err)
+function _M.deleteById(id)
+    -- removeFlags: single
+    local h = model:new(oss_options)
+    local col = h:getCol(_M.colName)
+    
+    local query = {
+        _id = model.newObid(id)
+    }
+
+    local flags = {
+        single = true
+    }
+
+    local r, err = col:remove(query, flags)
+    h:release()
+    return r, err
 end
 
-function _M.get(id) 
-  return _M._db_entity:find(id)
+function _M.get(id)
+    local h = model:new(oss_options)
+    local col = h:getCol(_M.colName)
+    local r = col:find_one({_id = model.newObid(id)})
+    h:release()
+    return model.getBsonVal(r)
 end
 
-function _M.getAll() 
-  return _M._db_entity:select("WHERE 1=1 ORDER BY CreateTime DESC", { fields = "*" })
+function _M.getAll()
+    local h = model:new(oss_options)
+    local col = h:getCol(_M.colName)
+    --
+    local r = {}
+    local cursor = col:find({}, {sort = {_id = -1}})
+    for row in cursor:iterator() do
+        local row_ = model.obidSafe(row)
+        tbl_insert(r, row_)
+    end
+    h:release()
+    return r
 end
 
 return _M

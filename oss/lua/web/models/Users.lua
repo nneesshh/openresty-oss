@@ -11,6 +11,7 @@ local _M = {
 
 function _M.create()
     local h = model:new(default_options)
+    local col = h:getCol(_M.colName)
 
     h:release()
 end
@@ -20,7 +21,7 @@ function _M.get(id)
     local col = h:getCol(_M.colName)
     local r = col:find_one({_id = model.newObid(id)})
     h:release()
-    return model.getBsonValSafe(r)
+    return model.bsonObidSafe(r)
 end
 
 function _M.getByName(name)
@@ -28,7 +29,7 @@ function _M.getByName(name)
     local col = h:getCol(_M.colName)
     local r = col:find_one({UserName = name})
     h:release()
-    return model.getBsonValSafe(r)
+    return model.bsonObidSafe(r)
 end
 
 return _M

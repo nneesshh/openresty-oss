@@ -53,12 +53,12 @@ return function(app)
       local News = require("models.News")
       local d = date(false)
       
-      local obj = News.create()
-      if obj and self.session.user then
-        obj.CreateBy = self.session.user.Id
-        obj.CreateTime = d:fmt("%F %T")
-        obj.Content = self.params.Content
-        News.update(obj)
+      local content, createby, createtime
+      if self.session.user then
+        content = self.params.Content
+        createby = self.session.user.UserName
+        createtime = d:fmt("%F %T")
+        News.create(content, createby, createtime)
         
         return { redirect_to = self:url_for("admin_news") }
       else
@@ -80,12 +80,12 @@ return function(app)
     --
     GET = capture_errors(function(self)
       validate.assert_valid(self.params, {
-        { "Id", exists = true, min_length = 36, max_length = 36 },
+        { "Id", exists = true, min_length = 24, max_length = 24 },
       })
       
       local News = require("models.News")
-      
-      local obj = News.get(self.params.Id)
+      local id = self.params.Id
+      local obj = News.get(id)
       if obj then
         self.CurrentNews = obj
       else
@@ -102,18 +102,19 @@ return function(app)
     --
     POST = capture_errors(function(self)
       validate.assert_valid(self.params, {
-        { "Id", exists = true, min_length = 36, max_length = 36 },
+        { "Id", exists = true, min_length = 24, max_length = 24 },
         { "Content", exists = true, min_length = 2, max_length = 4096 },
       })
       
       local News = require("models.News")
       local d = date(false)
       
-      local obj = News.get(self.params.Id)
+      local id = self.params.Id
+      local obj = News.get(id)
       if obj and self.session.user then
-        obj.CreateBy = self.session.user.Id
-        obj.CreateTime = d:fmt("%F %T")
-        obj.Content = self.params.Content
+        obj.content = self.params.Content
+        obj.createby = self.session.user.UserName
+        obj.createtime = d:fmt("%F %T")
         News.update(obj)
       else
         assert_error(false, "编辑失败Post!")
@@ -138,7 +139,7 @@ return function(app)
     --
     GET = capture_errors(function(self)
       validate.assert_valid(self.params, {
-        { "Id", exists = true, min_length = 36, max_length = 36 },
+        { "Id", exists = true, min_length = 24, max_length = 24 },
       })
       
       self.Consent = {
@@ -153,21 +154,16 @@ return function(app)
     --
     POST = capture_errors(function(self)
       validate.assert_valid(self.params, {
-        { "Id", exists = true, min_length = 36, max_length = 36 },
+        { "Id", exists = true, min_length = 24, max_length = 24 },
         { "IsConsent", exists = true },
       })
       
       if "yes" == self.params.IsConsent then
         
         local News = require("models.News")
-        local obj = News.get(self.params.Id)
-        if obj then
-          News.delete(obj)
-          
-          return { redirect_to = self:url_for("admin_news") }
-        else
-          assert_error(false, "删除失败Post!")
-        end
+        local id = self.params.Id
+        News.deleteById(id)
+        return { redirect_to = self:url_for("admin_news") }
       else
         return { redirect_to = self:url_for("admin_news") }
       end

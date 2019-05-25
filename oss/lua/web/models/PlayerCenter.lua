@@ -10,12 +10,6 @@ local _M = {
     colName = "user_info"
 }
 
-function _M.create()
-    local h = model:new(oss_options)
-
-    h:release()
-end
-
 function _M.get(id)
     local h = model:new(oss_options)
     local col = h:getCol(_M.colName)
@@ -88,7 +82,7 @@ function _M.gm_addCoinByTicketId(ticketid, coinNum)
         multi = true
     }
 
-    local col = h:getCol("user_info")
+    local col = h:getCol(_M.colName)
     local r, err = col:update(query, update, flags)
     h:release()
     return r, err
@@ -111,7 +105,7 @@ function _M.gm_addCoinByUserName(username, coinNum)
         multi = true
     }
 
-    local col = h:getCol("user_info")
+    local col = h:getCol(_M.colName)
     local r, err = col:update(query, update, flags)
     h:release()
     return r, err
@@ -132,7 +126,7 @@ function _M.gm_addCoin(coinNum)
         multi = true
     }
 
-    local col = h:getCol("user_info")
+    local col = h:getCol(_M.colName)
     local r, err = col:update(query, update, flags)
     h:release()
     return r, err
@@ -155,7 +149,7 @@ function _M.gm_adjustNegtiveCoin(toCoinNum)
         multi = true
     }
 
-    local col = h:getCol("user_info")
+    local col = h:getCol(_M.colName)
     local r, err = col:update(query, update, flags)
     h:release()
     return r, err

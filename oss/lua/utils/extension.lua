@@ -1,11 +1,29 @@
-function math.newrandomseed()
-    local ok, socket =
-        pcall(
-        function()
-            return require("socket")
-        end
-    )
+-- extend
+local math = math
+local io = io
+local table = table
+local string = string
 
+-- local
+local pcall, require, os, tonumber, tostring, pairs, ipairs = pcall, require, os, tonumber, tostring, pairs, ipairs
+local tbl_insert = table.insert
+local tbl_remove = table.remove
+local str_len = string.len
+local str_byte = string.byte
+local str_sub = string.sub
+local str_gsub = string.gsub
+local str_find = string.find
+
+--
+local function __safe_number(value)
+    return tonumber(value) or 0
+end
+
+---
+--- math
+---
+function math.newrandomseed()
+    local ok, socket = pcall(function() return require("socket") end)
     if ok then
         math.randomseed(socket.gettime() * 1000)
     else
@@ -18,7 +36,7 @@ function math.newrandomseed()
 end
 
 function math.round(value)
-    value = checknumber(value)
+    value = __safe_number(value)
     return math.floor(value + 0.5)
 end
 
@@ -32,6 +50,9 @@ function math.radian2angle(radian)
     return radian / pi_mul_180
 end
 
+---
+--- io
+---
 function io.exists(path)
     local file = io.open(path, "r")
     if file then
@@ -66,10 +87,10 @@ function io.writefile(path, content, mode)
 end
 
 function io.pathinfo(path)
-    local pos = string.len(path)
+    local pos = str_len(path)
     local extpos = pos + 1
     while pos > 0 do
-        local b = string.byte(path, pos)
+        local b = str_byte(path, pos)
         if b == 46 then -- 46 = char "."
             extpos = pos
         elseif b == 47 then -- 47 = char "/"
@@ -78,11 +99,11 @@ function io.pathinfo(path)
         pos = pos - 1
     end
 
-    local dirname = string.sub(path, 1, pos)
-    local filename = string.sub(path, pos + 1)
+    local dirname = str_sub(path, 1, pos)
+    local filename = str_sub(path, pos + 1)
     extpos = extpos - pos
-    local basename = string.sub(filename, 1, extpos - 1)
-    local extname = string.sub(filename, extpos)
+    local basename = str_sub(filename, 1, extpos - 1)
+    local extname = str_sub(filename, extpos)
     return {
         dirname = dirname,
         filename = filename,
@@ -103,6 +124,9 @@ function io.filesize(path)
     return size
 end
 
+---
+--- table
+---
 function table.nums(t)
     local count = 0
     for k, v in pairs(t) do
@@ -133,18 +157,6 @@ function table.merge(dst, src)
     end
 end
 
-function table.insertto(dst, src, begin)
-    begin = checkint(begin)
-    if begin <= 0 then
-        begin = #dst + 1
-    end
-
-    local len = #src
-    for i = 0, len - 1 do
-        dst[i + begin] = src[i + 1]
-    end
-end
-
 function table.indexof(array, value, begin)
     for i = begin or 1, #array do
         if array[i] == value then
@@ -167,7 +179,7 @@ function table.removebyvalue(array, value, removeall)
     local c, i, max = 0, 1, #array
     while i <= max do
         if array[i] == value then
-            table.remove(array, i)
+            tbl_remove(array, i)
             c = c + 1
             i = i - 1
             max = max - 1
@@ -218,7 +230,7 @@ function table.findarray(t, fn)
     local g = {}
     for k, v in pairs(t) do
         if fn(v, k) then
-            table.insert(g, v)
+            tbl_insert(g, v)
         end
     end
     return g
@@ -238,7 +250,7 @@ function table.ifindarray(t, fn)
     local g = {}
     for i, v in ipairs(t) do
         if fn(v, i) then
-            table.insert(g, v)
+            tbl_insert(g, v)
         end
     end
     return g
@@ -248,7 +260,7 @@ function table.maparray(t, fn)
     local g = {}
     for k, v in pairs(t) do
         local _t = fn(v, k)
-        table.insert(g, _t)
+        tbl_insert(g, _t)
     end
     return g
 end
@@ -283,7 +295,7 @@ function table.imaparray(t, fn)
     local g = {}
     for i, v in ipairs(t) do
         local _t = fn(v, i)
-        table.insert(g, _t)
+        tbl_insert(g, _t)
     end
     return g
 end
@@ -314,6 +326,9 @@ function table.unique(t, bArray)
     return n
 end
 
+---
+--- string
+---
 string._htmlspecialchars_set = {}
 string._htmlspecialchars_set["&"] = "&amp;"
 string._htmlspecialchars_set['"'] = "&quot;"
@@ -323,26 +338,26 @@ string._htmlspecialchars_set[">"] = "&gt;"
 
 function string.htmlspecialchars(input)
     for k, v in pairs(string._htmlspecialchars_set) do
-        input = string.gsub(input, k, v)
+        input = str_gsub(input, k, v)
     end
     return input
 end
 
 function string.restorehtmlspecialchars(input)
     for k, v in pairs(string._htmlspecialchars_set) do
-        input = string.gsub(input, v, k)
+        input = str_gsub(input, v, k)
     end
     return input
 end
 
 function string.nl2br(input)
-    return string.gsub(input, "\n", "<br />")
+    return str_gsub(input, "\n", "<br />")
 end
 
 function string.text2html(input)
-    input = string.gsub(input, "\t", "    ")
+    input = str_gsub(input, "\t", "    ")
     input = string.htmlspecialchars(input)
-    input = string.gsub(input, " ", "&nbsp;")
+    input = str_gsub(input, " ", "&nbsp;")
     input = string.nl2br(input)
     return input
 end
@@ -356,65 +371,62 @@ function string.split(input, delimiter)
     local pos, arr = 0, {}
     -- for each divider found
     for st, sp in function()
-        return string.find(input, delimiter, pos, true)
+        return str_find(input, delimiter, pos, true)
     end do
-        table.insert(arr, string.sub(input, pos, st - 1))
+        tbl_insert(arr, str_sub(input, pos, st - 1))
         pos = sp + 1
     end
-    table.insert(arr, string.sub(input, pos))
+    tbl_insert(arr, str_sub(input, pos))
     return arr
 end
 
 function string.ltrim(input)
-    return string.gsub(input, "^[ \t\n\r]+", "")
+    return str_gsub(input, "^[ \t\n\r]+", "")
 end
 
 function string.rtrim(input)
-    return string.gsub(input, "[ \t\n\r]+$", "")
+    return str_gsub(input, "[ \t\n\r]+$", "")
 end
 
 function string.trim(input)
-    input = string.gsub(input, "^[ \t\n\r]+", "")
-    return string.gsub(input, "[ \t\n\r]+$", "")
+    input = str_gsub(input, "^[ \t\n\r]+", "")
+    return str_gsub(input, "[ \t\n\r]+$", "")
 end
 
 function string.ucfirst(input)
-    return string.upper(string.sub(input, 1, 1)) .. string.sub(input, 2)
+    return string.upper(str_sub(input, 1, 1)) .. str_sub(input, 2)
 end
 
-local function urlencodechar(char)
-    return "%" .. string.format("%02X", string.byte(char))
-end
 function string.urlencode(input)
     -- convert line endings
-    input = string.gsub(tostring(input), "\n", "\r\n")
+    input = str_gsub(tostring(input), "\n", "\r\n")
     -- escape all characters but alphanumeric, '.' and '-'
-    input = string.gsub(input, "([^%w%.%- ])", urlencodechar)
+    input = str_gsub(input, "([^%w%.%- ])", function(ch) return "%" .. string.format("%02X", str_byte(ch)) end)
     -- convert spaces to "+" symbols
-    return string.gsub(input, " ", "+")
+    return str_gsub(input, " ", "+")
 end
 
 function string.urldecode(input)
-    input = string.gsub(input, "+", " ")
+    input = str_gsub(input, "+", " ")
     input =
-        string.gsub(
+        str_gsub(
         input,
         "%%(%x%x)",
         function(h)
-            return string.char(checknumber(h, 16))
+            return string.char(__safe_number(h, 16))
         end
     )
-    input = string.gsub(input, "\r\n", "\n")
+    input = str_gsub(input, "\r\n", "\n")
     return input
 end
 
 function string.utf8len(input)
-    local len = string.len(input)
+    local len = str_len(input)
     local left = len
     local cnt = 0
     local arr = {0, 0xc0, 0xe0, 0xf0, 0xf8, 0xfc}
     while left ~= 0 do
-        local tmp = string.byte(input, -left)
+        local tmp = str_byte(input, -left)
         local i = #arr
         while arr[i] do
             if tmp >= arr[i] then
@@ -429,10 +441,10 @@ function string.utf8len(input)
 end
 
 function string.formatnumberthousands(num)
-    local formatted = tostring(checknumber(num))
+    local formatted = tostring(__safe_number(num))
     local k
     while true do
-        formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", "%1,%2")
+        formatted, k = str_gsub(formatted, "^(-?%d+)(%d%d%d)", "%1,%2")
         if k == 0 then
             break
         end

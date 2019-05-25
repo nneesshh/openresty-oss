@@ -1,9 +1,9 @@
 ﻿<%
     local id, createBy, createTime, content
     if CurrentNews then
-        id = CurrentNews.Id
-        createTime = CurrentNews.CreateTime
-        content = CurrentNews.Content
+        id = CurrentNews._id
+        createTime = CurrentNews.createtime
+        content = CurrentNews.content
     end
     
     if session.user then
