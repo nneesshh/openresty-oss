@@ -70,14 +70,14 @@ return function(app)
       })
       
       local NewsCenter = require("models.NewsCenter")
-      local d = date(false)
+      local now = date(false)
 
       local newstype = NEWS_TYPE_VERSION
       local content, createby, createtime
       if self.session.user then
         content = self.params.Content
         createby = self.session.user.UserName
-        createtime = d:fmt("%F %T")
+        createtime = now
         NewsCenter.create(newstype, content, createby, createtime)
         
         return { redirect_to = self:url_for("news_version") }
@@ -127,14 +127,14 @@ return function(app)
       })
       
       local News = require("models.NewsCenter")
-      local d = date(false)
+      local now = date(false)
       
       local id = self.params.Id
       local obj = News.get(id)
       if obj and self.session.user then
         obj.content = self.params.Content
         obj.createby = self.session.user.UserName
-        obj.createtime = d:fmt("%F %T")
+        obj.createtime = now
         News.update(obj)
       else
         assert_error(false, "编辑失败Post!")
@@ -233,14 +233,14 @@ return function(app)
       })
       
       local NewsCenter = require("models.NewsCenter")
-      local d = date(false)
+      local now = date(false)
 
       local newstype = NEWS_TYPE_CHEAT
       local content, createby, createtime
       if self.session.user then
         content = self.params.Content
         createby = self.session.user.UserName
-        createtime = d:fmt("%F %T")
+        createtime = now
         NewsCenter.create(newstype, content, createby, createtime)
         
         return { redirect_to = self:url_for("news_cheat") }
@@ -290,14 +290,14 @@ return function(app)
       })
       
       local News = require("models.NewsCenter")
-      local d = date(false)
+      local now = date(false)
       
       local id = self.params.Id
       local obj = News.get(id)
       if obj and self.session.user then
         obj.content = self.params.Content
         obj.createby = self.session.user.UserName
-        obj.createtime = d:fmt("%F %T")
+        obj.createtime = now
         News.update(obj)
       else
         assert_error(false, "编辑失败Post!")
@@ -396,14 +396,14 @@ return function(app)
       })
       
       local NewsCenter = require("models.NewsCenter")
-      local d = date(false)
+      local now = date(false)
 
       local newstype = NEWS_TYPE_FAQ
       local content, createby, createtime
       if self.session.user then
         content = self.params.Content
         createby = self.session.user.UserName
-        createtime = d:fmt("%F %T")
+        createtime = now
         NewsCenter.create(newstype, content, createby, createtime)
         
         return { redirect_to = self:url_for("news_faq") }
@@ -453,14 +453,14 @@ return function(app)
       })
       
       local News = require("models.NewsCenter")
-      local d = date(false)
+      local now = date(false)
       
       local id = self.params.Id
       local obj = News.get(id)
       if obj and self.session.user then
         obj.content = self.params.Content
         obj.createby = self.session.user.UserName
-        obj.createtime = d:fmt("%F %T")
+        obj.createtime = now
         News.update(obj)
       else
         assert_error(false, "编辑失败Post!")

@@ -5,9 +5,12 @@ local bit = require("bit")
 local bnot, band, bor, bxor = bit.bnot, bit.band, bit.bor, bit.bxor
 local lshift, rshift, arshift, rol = bit.lshift, bit.rshift, bit.arshift, bit.rol
 local bit_tohex = bit.tohex
-local setmetatable = setmetatable
+local setmetatable, type, assert = setmetatable, type, assert
 local tostring = tostring
 local tbl_insert, tbl_remove = table.insert, table.remove
+
+local date = require("date")
+local os_time = os.time
 
 local _M = {
     poolMap = {}
@@ -35,6 +38,35 @@ end
 
 function _M.newObidFromData(str12OrNil)
     return new_object_id_from_data(str12OrNil)
+end
+
+-- a is lua date
+function _M.dateToTm(a)
+    -- return time_t(tm)
+    local yy, mm, dd = a:getdate()
+    print("******** yy=" .. yy .. ", mm=" .. mm  .. ", dd=" .. dd)
+    local h, m, s, t = a:gettime()
+    print("******** h=" .. h .. ", m=" .. m .. ", s=" .. s .. ", t=" .. t)
+    local tm = os_time({year=yy, month=mm, day=dd, hour=h, min=m, sec=s})
+    --return date.diff(d, date.epoch()):spanseconds()
+    print("******* tm=" .. tostring(tm))
+    return tm
+end
+
+-- tm is time_t
+function _M.tmToMongoDateTime(tm)
+    return mongo.DateTime(tm)
+end
+
+-- d is lua date
+function _M.dateToMongoDateTime(d)
+    local tm = _M.dateToTm(d)
+    return _M.tmToMongoDateTime(tm)
+end
+
+-- tm is time_t
+function _M.dateFromTm(tm)
+    return date(tm)
 end
 
 function _M.obidSafe(bval)

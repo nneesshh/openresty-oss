@@ -12,7 +12,7 @@ local cwd = (...):gsub('%.[^%.]+$', '') .. "."
 local oss_options = require(cwd .. "GameDbUrls").getOptions()
 
 local _M = {
-  _subid = 0
+  
 }
 
 --  MailData_MAIL_TYPE_MAIL_TYPE_UNKNOWN = 0,
@@ -24,7 +24,6 @@ local _M = {
 --  MailData_MAIL_TYPE_MAIL_TYPE_LV_SHOPPING = 6
 
 function _M.create(mailtype, subject, content, attachment, createtime, burntime, mailto_level, ignore_rule) 
-  local subid = _M._subid + 1
   local data = {}
   local res, d1, d2 = db.query(oss_options, "CALL __oss_create_game_mail(?,?,?,?,?,?,?,?,?)", subid, mailtype, subject, content, attachment, createtime, burntime, mailto_level, ignore_rule)
   if res then
@@ -34,9 +33,6 @@ function _M.create(mailtype, subject, content, attachment, createtime, burntime,
         table.insert(data, row)
       end
     end
-    
-    --
-    _M._subid = subid
   end
   return data
 end

@@ -18,7 +18,7 @@ function _M.create(newstype, content, createby, createtime)
       newstype = newstype,
       content = content,
       createby = createby,
-      createtime = createtime,
+      createtime = model.dateToMongoDateTime(createtime),
     })
     h:release()
 end
@@ -35,7 +35,7 @@ function _M.update(obj)
         ["$set"] = {
           content = obj.content,
           createby = obj.createby,
-          createtime = obj.createtime,
+          createtime = model.dateToMongoDateTime(obj.createtime),
         }
     }
 
