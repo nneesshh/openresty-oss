@@ -131,7 +131,7 @@
 
     <!-- query button -->
     <div class="col-sm-12">
-        <form class="form-horizontal" role="form" id="userRetentionQueryForm">
+        <form role="form" id="userRetentionQueryForm">
             <div class="form-group">
                 <label class="col-sm-2 control-label" style="width:120px;">输入查询时间:</label>
                 <div class="col-sm-2 ">

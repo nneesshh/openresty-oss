@@ -7,14 +7,15 @@ local oss_options = require(cwd .. "GameDbUrls").getOptions()
 local model = require(cwd .. "MongoModel")
 
 local _M = {
-    colName = "game_news"
+    colName = "game_news",
 }
 
-function _M.create(content, createby, createtime)
+function _M.create(newstype, content, createby, createtime)
     -- insertFlags: continueOnError, noValidate
     local h = model:new(oss_options)
     local col = h:getCol(_M.colName)
     col:insert({
+      newstype = newstype,
       content = content,
       createby = createby,
       createtime = createtime,
@@ -74,12 +75,14 @@ function _M.get(id)
     return model.getBsonVal(r)
 end
 
-function _M.getAll()
+function _M.getAllByType(newstype)
     local h = model:new(oss_options)
     local col = h:getCol(_M.colName)
     --
     local r = {}
-    local cursor = col:find({}, {sort = {_id = -1}})
+    local cursor = col:find({
+        newstype = newstype
+    }, {sort = {_id = -1}})
     for row in cursor:iterator() do
         local row_ = model.obidSafe(row)
         tbl_insert(r, row_)

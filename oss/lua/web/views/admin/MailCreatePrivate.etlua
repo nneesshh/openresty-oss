@@ -60,14 +60,14 @@
             <% end %>
 
             <div class="form-group">
-                <label id="lCreateTime" for="CreateTime">日期:</label>
+                <label class="col-sm-3 control-label">日期:</label>
                 <span style="font-size:20px;"><%= now:fmt('%F %T') %></span>
             </div>
 
             <div class="clearfix" style="margin-bottom: 10px;"></div><!-- 清除浮动 -->
 
             <div class="form-group">
-                <label id="lMailType" for="MailType">邮件类型:</label>
+                <label class="col-sm-3 control-label">邮件类型:</label>
                 <select name="MailType">
                     <% if mailType and 0 == tonumber(mailType) then %>
                     <option value="0" selected>普通</option>
@@ -88,7 +88,7 @@
             <div class="clearfix" style="margin-bottom: 10px;"></div><!-- 清除浮动 -->
 
             <div class="form-group">
-                <label id="lUserId" for="UserId">收件人账号名称:</label>
+                <label class="col-sm-3 control-label">收件人账号名称:</label>
                 <input type="text" name="UserId" style="height:30px;width:300px;" value="<%= userId or '' %>" />
             </div>
 

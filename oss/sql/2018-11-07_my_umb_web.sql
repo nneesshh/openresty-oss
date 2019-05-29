@@ -110,16 +110,16 @@ CREATE TABLE `menus` (
 -- Records of menus
 -- ----------------------------
 INSERT INTO `menus` VALUES ('10d66160-84d1-468b-93f7-81e6b99c8982', 'User', 'fa fa-link', '用户管理', '00000000-0000-0000-0000-000000000000', '', '3', '0', '/AdminUser', '1');
-INSERT INTO `menus` VALUES ('10d66160-84d1-468b-93f7-81e6b99c8983', 'GamePlayer', 'fa fa-link', '游戏玩家数据查询', '00000000-0000-0000-0000-000000000000', '', '7', '0', '/PlayerCenter', '0');
+INSERT INTO `menus` VALUES ('10d66160-84d1-468b-93f7-81e6b99c8983', 'GamePlayer', 'fa fa-link', '玩家数据', '00000000-0000-0000-0000-000000000000', '', '7', '0', '/PlayerManage', '0');
 INSERT INTO `menus` VALUES ('7389c75c-cc61-40b7-909c-737d599347b7', 'Role', 'fa fa-link', '角色管理', '00000000-0000-0000-0000-000000000000', '', '2', '0', '/AdminRole', '1');
 INSERT INTO `menus` VALUES ('7ea404ab-1de1-49be-b846-effbe2c85a1a', 'GameQuest', 'fa fa-link', '任务统计', '00000000-0000-0000-0000-000000000000', '', '13', '1', '/StatsUserQuest', '1');
 INSERT INTO `menus` VALUES ('843e0bba-66f7-4190-8a98-6df4dafe15ab', 'Department', 'fa fa-link', '组织机构管理', '00000000-0000-0000-0000-000000000000', '', '1', '0', '/AdminDepartment', '1');
 INSERT INTO `menus` VALUES ('9531cbcc-252a-44df-9444-9ee092f1aa9f', 'Charge', 'fa fa-link', '充值统计', '00000000-0000-0000-0000-000000000000', '', '12', '1', '/StatsUserCharge', '0');
 INSERT INTO `menus` VALUES ('9e568cab-1c3e-4a8d-92f9-2a4926008d47', 'Online', 'fa fa-link', '在线统计', '00000000-0000-0000-0000-000000000000', '', '14', '1', '/StatsUserOnline', '0');
 INSERT INTO `menus` VALUES ('cf6072f1-d246-4a57-a461-2a98f5ba270b', 'Diamond', 'fa fa-link', '钻石消费', '00000000-0000-0000-0000-000000000000', null, '11', '1', '/StatsUserDiamond', '0');
-INSERT INTO `menus` VALUES ('d7f8090b-a07d-48df-9142-8bcc613c6d93', 'News', 'fa fa-link', '更新公告管理', '00000000-0000-0000-0000-000000000000', '', '4', '0', '/AdminNews', '0');
-INSERT INTO `menus` VALUES ('d7f8090b-a07d-48df-9142-8bcc613c6d94', 'GameAnnouncement', 'fa fa-link', 'GM公告管理', '00000000-0000-0000-0000-000000000000', '', '5', '0', '/AdminGameAnnouncement', '0');
-INSERT INTO `menus` VALUES ('d7f8090b-a07d-48df-9142-8bcc613c6d96', 'Mail', 'fa fa-link', 'GM邮件管理', '00000000-0000-0000-0000-000000000000', '', '6', '0', '/AdminMail', '0');
+INSERT INTO `menus` VALUES ('d7f8090b-a07d-48df-9142-8bcc613c6d93', 'News', 'fa fa-link', '游戏公告', '00000000-0000-0000-0000-000000000000', '', '4', '0', '/AdminNews', '0');
+INSERT INTO `menus` VALUES ('d7f8090b-a07d-48df-9142-8bcc613c6d94', 'GameAnnouncement', 'fa fa-link', 'GM喇叭', '00000000-0000-0000-0000-000000000000', '', '5', '0', '/AdminGameAnnouncement', '0');
+INSERT INTO `menus` VALUES ('d7f8090b-a07d-48df-9142-8bcc613c6d96', 'Mail', 'fa fa-link', 'GM邮件', '00000000-0000-0000-0000-000000000000', '', '6', '0', '/AdminMail', '0');
 INSERT INTO `menus` VALUES ('e04d00ed-007f-4466-8eb8-668e17057888', 'OnlineHour', 'fa fa-link', '小时在线', '00000000-0000-0000-0000-000000000000', '', '15', '1', '/StatsUserOnlineHour', '0');
 INSERT INTO `menus` VALUES ('f04d00ed-007f-4466-8eb8-668e17057888', 'OnlineSnapshot', 'fa fa-link', '当前在线', '00000000-0000-0000-0000-000000000000', '', '16', '1', '/StatsUserOnlineSnapshot', '0');
 INSERT INTO `menus` VALUES ('f04d00ed-007f-4466-8eb8-668e17057889', 'Retention', 'fa fa-link', '留存率统计', '00000000-0000-0000-0000-000000000000', '', '17', '1', '/StatsUserRetention', '0');

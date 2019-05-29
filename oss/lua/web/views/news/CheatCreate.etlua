@@ -1,0 +1,91 @@
+﻿<%
+    local date = require("date")
+    local now = date(false);
+%>
+
+<script type="text/javascript">
+    function _do_ajax_submit_NewsCheatCreateForm() {
+        var option = {
+            url : '/NewsManage/Cheat/Create',
+            type : 'POST',
+            dataType: 'html',
+            //headers: { "ClientCallMode" : "ajax" }, //添加请求头部
+            success: function(data) {
+                $("#_ajax_call_result").html(data);
+            },
+            error: function(xmlhr, textStatus, errorThrown) {
+                alert("failed!!! xmlhr.status=" + xmlhr.status + 
+                        ", xmlhr.readyState=" + xmlhr.readyState + 
+                        ", textStatus=" + textStatus + 
+                        ", errorThrown=" + errorThrown);
+            },
+        };
+        $("#newsCreateForm").ajaxSubmit(option);
+        return false; //最好返回false，因为如果按钮类型是submit,则表单自己又会提交一次;返回false阻止表单再次提交
+    };
+</script>
+
+<div class="col-sm-offset-3 col-sm-9">
+    <h2>反作弊公告发布页面</h2>
+</div>
+
+<div class="clearfix" style="margin-bottom: 30px;"></div><!-- 清除浮动 -->
+
+<div class="row">
+    <form id="newsCreateForm" class="form-horizontal" role="form">
+        <% if errors then %>
+        <div class="form-group">
+            <div class="text-danger"><%= errors[1] %></div>
+        </div>
+        <% end %>
+
+        <% if success_infos then %>
+        <div class="form-group">
+            <div class="text-success"><%= success_infos[1] %></div>
+        </div>
+        <% end %>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">日期:</label>
+            <div class="col-sm-9" style="margin-top: 6px;"><%= now:fmt('%F %T') %></div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">内容:</label>
+            <div class="col-sm-9" style="margin-top: 6px;">
+                <textarea id="oriContent" name="Content" style="height:400px;width:600px;" onkeyup="convert()"></textarea>
+            </div>
+        </div>
+
+        <div class="clearfix" style="margin-bottom: 10px;"></div><!-- 清除浮动 -->
+
+        <div class="form-group">
+            <p></p>
+            <label class="col-sm-3 control-label">效果预览:</label>
+            <div class="col-sm-9" style="margin-top: 6px;">
+                <div id="result" style="border:1px dotted black;"></div>
+            </div>
+            <p></p>
+        </div>
+
+        <div class="form-group">
+            <a class="btn btn-primary margin-bottom center-block" style="width:200px;" href="javascript:void(0)" onclick="_do_ajax_submit_NewsCheatCreateForm()">提交</a>
+        </div>
+    </form>
+</div>
+
+<p></p>
+
+<div>
+    <a class="btn-lg" href="javascript:void(0)" onclick="_do_ajax_call_NewsManageCheat()">返回上级页面</a>
+</div>
+
+<script type="text/javascript">
+    function convert() {
+        var text = document.getElementById("oriContent").value;
+        var converter = new showdown.Converter();
+        var html = converter.makeHtml(text);
+        document.getElementById("result").innerHTML = html;
+    }
+
+</script>

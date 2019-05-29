@@ -16,12 +16,12 @@
 %>
 
 <script type="text/javascript">
-    function _do_ajax_submit_gm_add_coin_PlayerCenterForm() {
+    function _do_ajax_submit_gm_add_coin_PlayerManageForm() {
         
         $("#successInfo").empty();
 
         var option = {
-            url : '/PlayerCenter/GMAddCoin',
+            url : '/PlayerManage/GMAddCoin',
             type : 'POST',
             dataType: 'html',
             //headers: { "ClientCallMode" : "ajax" }, //添加请求头部
@@ -60,7 +60,7 @@
 
     <!-- query button -->
     <div class="col-sm-12">
-        <form class="form-horizontal" role="form" id="playerCenterForm">
+        <form role="form" id="playerCenterForm">
             <div class="form-group">
                 <label class="col-sm-2 control-label" style="width:200px;">输入玩家7位数字ID:</label>
                 <div class="col-sm-4">
@@ -81,7 +81,7 @@
                     <input style="width:230px;" type="text" id="coinNum" name="CoinNum" value="<%= coinNum or '10000' %>" />
                 </div>
                 <div class="col-sm-2 ">
-                    <a class="btn btn-primary" style="width:100px;" href="javascript:void(0)" onclick="_do_ajax_submit_gm_add_coin_PlayerCenterForm()">增加</a>
+                    <a class="btn btn-primary" style="width:100px;" href="javascript:void(0)" onclick="_do_ajax_submit_gm_add_coin_PlayerManageForm()">增加</a>
                 </div>
             </div>
         </form>

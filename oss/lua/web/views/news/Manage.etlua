@@ -1,7 +1,7 @@
 ﻿<script type="text/javascript">
-    function _do_ajax_call_PlayerManageQueryOnline() {
+    function _do_ajax_call_NewsManageVersion() {
         $.ajax({
-            url: "/PlayerManage/QueryOnline",
+            url: "/NewsManage/Version",
             type: "GET",
             dataType: "html",
             //async: false,
@@ -15,9 +15,9 @@
         });
     };
 
-    function _do_ajax_call_PlayerManageQueryCharge() {
+    function _do_ajax_call_NewsManageCheat() {
         $.ajax({
-            url: "/PlayerManage/QueryCharge",
+            url: "/NewsManage/Cheat",
             type: "GET",
             dataType: "html",
             //async: false,
@@ -31,9 +31,9 @@
         });
     };
 
-    function _do_ajax_call_PlayerManageGMAddCoin() {
+    function _do_ajax_call_NewsManageFAQ() {
         $.ajax({
-            url: "/PlayerManage/GMAddCoin",
+            url: "/NewsManage/FAQ",
             type: "GET",
             dataType: "html",
             //async: false,
@@ -51,7 +51,7 @@
 
 <div class="row" >
     <div class="col-sm-offset-1 col-sm-3">
-        <h1 class="text-center">玩家数据管理</h1>
+        <h1 class="text-center">游戏公告管理</h1>
     </div>
 </div>
 
@@ -59,7 +59,7 @@
 
 <div class="row">
     <div class="col-sm-offset-1 col-sm-3">
-        <a class="btn btn-block" href="javascript:void(0)" onclick="_do_ajax_call_PlayerManageQueryOnline()"><h3><u>查询在线</u></h3></a>
+        <a class="btn btn-block" href="javascript:void(0)" onclick="_do_ajax_call_NewsManageVersion()"><h3><u>版本公告</u></h3></a>
     </div>
 </div>
 
@@ -67,7 +67,7 @@
 
 <div class="row">
     <div class="col-sm-offset-1 col-sm-3">
-        <a class="btn btn-block" href="javascript:void(0)" onclick="_do_ajax_call_PlayerManageQueryCharge()"><h3><u>查询充值</u></h3></a>
+        <a class="btn btn-block" href="javascript:void(0)" onclick="_do_ajax_call_NewsManageCheat()"><h3><u>反作弊公告</u></h3></a>
     </div>
 </div>
 
@@ -75,6 +75,6 @@
 
 <div class="row">
     <div class="col-sm-offset-1 col-sm-3">
-        <a class="btn btn-block" href="javascript:void(0)" onclick="_do_ajax_call_PlayerManageGMAddCoin()"><h3><u>GM_ADD_COIN</u></h3></a>
+        <a class="btn btn-block" href="javascript:void(0)" onclick="_do_ajax_call_NewsManageFAQ()"><h3><u>FAQ</u></h3></a>
     </div>
 </div>

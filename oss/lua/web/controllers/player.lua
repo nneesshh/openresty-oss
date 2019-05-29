@@ -16,7 +16,7 @@ local validate = require("lapis.validate")
 local auth = require(cwd .. "authorize")
 
 return function(app)
-  app:match("player_manage", "/PlayerCenter", respond_to({
+  app:match("player_manage", "/PlayerManage", respond_to({
     --
     before = function(self)
       auth(self, "any", self.route_name)
@@ -29,7 +29,7 @@ return function(app)
     
   }))
 
-  app:match("player_query_online", "/PlayerCenter/QueryOnline", respond_to({
+  app:match("player_query_online", "/PlayerManage/QueryOnline", respond_to({
     --
     before = function(self)
       auth(self, "any", self.route_name)
@@ -99,7 +99,7 @@ return function(app)
     
   }))
 
-  app:match("player_query_charge", "/PlayerCenter/QueryCharge", respond_to({
+  app:match("player_query_charge", "/PlayerManage/QueryCharge", respond_to({
     --
     before = function(self)
       auth(self, "any", self.route_name)
@@ -162,7 +162,7 @@ return function(app)
   end)
   }))
 
-  app:match("player_gm_add_coin", "/PlayerCenter/GMAddCoin", respond_to({
+  app:match("player_gm_add_coin", "/PlayerManage/GMAddCoin", respond_to({
     --
     before = function(self)
       auth(self, "any", self.route_name)

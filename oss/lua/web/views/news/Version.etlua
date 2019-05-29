@@ -1,0 +1,128 @@
+﻿<%
+    local id, createBy, createTime, content
+    if CurrentNews then
+        id = CurrentNews._id
+        createTime = CurrentNews.createtime
+        content = CurrentNews.content
+    end
+    
+    if session.user then
+        createBy = session.user.Name
+    end
+
+    -- save last
+    session.lastCode = "News"
+    session.lastUrl = "/AdminNews"
+%>
+
+<script type="text/javascript">
+    function _do_ajax_call_NewsVersionCreate() {
+        $.ajax({
+            url: "/NewsManage/Version/Create",
+            type: "GET",
+            dataType: "html",
+            //async: false,
+            async: true,
+            success: function(data) {
+                $("#_ajax_call_result").html(data);
+            },
+            error: function(){
+                alert("failed!!!");
+            }
+        });
+    };
+
+    function _do_ajax_call_NewsVersionEdit(newsId) {
+        $.ajax({
+            url: "/NewsManage/Version/Edit?Id=" + newsId,
+            type: "GET",
+            dataType: "html",
+            //async: false,
+            async: true,
+            success: function(data) {
+                $("#_ajax_call_result").html(data);
+            },
+            error: function(){
+                alert("failed!!!");
+            }
+        });
+    };
+
+    function _do_ajax_call_NewsVersionDelete(newsId) {
+        $.ajax({
+            url: "/NewsManage/Version/Delete?Id=" + newsId,
+            type: "GET",
+            dataType: "html",
+            //async: false,
+            async: true,
+            success: function(data) {
+                $("#_ajax_call_result").html(data);
+            },
+            error: function(){
+                alert("failed!!!");
+            }
+        });
+    };
+
+</script>
+<a class="btn btn-primary pull-left" href="javascript:void(0)" onclick="_do_ajax_call_NewsVersionCreate()">发布新的版本公告</a>
+
+<div class="col-sm-offset-3 col-sm-9">
+    <h1>版本公告</h1>
+</div>
+
+<div class="clearfix" style="margin-bottom: 30px;"></div><!-- 清除浮动 -->
+
+<div class="row">
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Id:</label>
+            <div class="col-sm-9" style="margin-top: 6px;"><%= id or '' %></div>
+        </div>
+        
+        <div class="form-group">
+            <label class="col-sm-3 control-label">时间:</label>
+            <div class="col-sm-9" style="margin-top: 6px;"><%= createTime or '' %></div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">发布者:</label>
+            <div class="col-sm-9" style="margin-top: 6px;"><%= createBy or '' %></div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">内容:</label>
+            <div class="col-sm-9" style="margin-top: 6px;">
+                <div id="result" style="width:600px;border:1px dotted black;"></div>
+
+                <div class="clearfix" style="margin-bottom: 30px;"></div><!-- 清除浮动 -->
+
+                <% if id then %>
+                <a class="btn btn-primary" href="javascript:void(0)" onclick="_do_ajax_call_NewsVersionEdit('<%= id %>')">编辑</a>
+                <a class="btn btn-primary" href="javascript:void(0)" onclick="_do_ajax_call_NewsVersionDelete('<%= id %>')">删除</a>
+                <% end %>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="clearfix" style="margin-bottom: 30px;"></div><!-- 清除浮动 -->
+
+<div>
+    <a class="btn-lg" href="javascript:void(0)" onclick="_do_ajax_call_News()">返回</a>
+</div>
+
+<script type="text/javascript">
+
+     $(function(){
+
+        function convert() {
+            var text = `<%= content or "" %>`;
+            var converter = new showdown.Converter();
+            var html = converter.makeHtml(text);
+            document.getElementById("result").innerHTML = html;
+        };
+        convert();
+    });
+
+</script>
