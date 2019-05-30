@@ -91,29 +91,30 @@
 
     <div class="clearfix" style="margin-bottom: 10px;"></div><!-- 清除浮动 -->
 
-    <!-- query button -->
-    <div class="col-sm-12">
-        <form role="form" id="playerCenterForm">
-            <div class="form-group">
-                <label class="col-sm-2 control-label" style="width:200px;">输入玩家7位数字ID:</label>
-                <div class="col-sm-4">
-                    <input style="width:200px;" type="text" id="userTickedId" name="UserTicketId" value="<%= userTicketId or '' %>" />
-                </div>
-                <div class="col-sm-2 ">
-                    <a class="btn btn-primary" style="width:100px;" href="javascript:void(0)" onclick="_do_ajax_submit_query_online_PlayerManageForm(true)">查询</a>
-                </div>
+    <!-- query form -->
+    <form id="playerCenterForm" class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label" style="width:200px;">输入玩家7位数字ID:</label>
+            <div class="col-sm-2">
+                <input style="width:200px;" type="text" id="userTicketId" name="UserTicketId" value="<%= userTicketId or '' %>" />
             </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label" style="width:200px;">输入玩家账号名称:</label>
-                <div class="col-sm-4">
-                    <input style="width:200px;" type="text" id="userName" name="UserName" value="<%= userName or '' %>" />
-                </div>
-                <div class="col-sm-2 ">
-                    <a class="btn btn-primary" style="width:100px;" href="javascript:void(0)" onclick="_do_ajax_submit_query_online_PlayerManageForm(false)">查询</a>
-                </div>
+            <div class="col-sm-2">
+                <a class="btn btn-primary" style="width:100px;" href="javascript:void(0)" onclick="_do_ajax_submit_query_online_PlayerManageForm(true)">查询</a>
             </div>
-        </form>
-    </div> 
+        </div>
+
+        <div class="clearfix" style="margin-bottom: 10px;"></div><!-- 清除浮动 -->
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" style="width:200px;">输入玩家账号名称:</label>
+            <div class="col-sm-2">
+                <input style="width:200px;" type="text" id="userName" name="UserName" value="<%= userName or '' %>" />
+            </div>
+            <div class="col-sm-2">
+                <a class="btn btn-primary" style="width:100px;" href="javascript:void(0)" onclick="_do_ajax_submit_query_online_PlayerManageForm(false)">查询</a>
+            </div>
+        </div>
+    </form>
 
     <div class="clearfix" style="margin-bottom: 10px;"></div><!-- 清除浮动 -->
 
