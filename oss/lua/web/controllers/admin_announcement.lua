@@ -24,7 +24,7 @@ return function(app)
     
     GET = function(self)
       local GameAnnouncement = require("models.GameAnnouncement")
-      local gameAnnouncementList = GameAnnouncement.getAll()
+      local gameAnnouncementList = GameAnnouncement.getLatest()
       
       if #gameAnnouncementList > 0 then
         self.CurrentGameAnnouncement = gameAnnouncementList[1]
@@ -52,37 +52,34 @@ return function(app)
         { "PlayInterval", exists = true, min_length = 1, max_length = 3 },
         { "Content", exists = true, min_length = 2, max_length = 4096 },
       })
+
+      local GameAnnouncement = require("models.GameAnnouncement")
+      local now = date(false)
     
-      -- nowtime
-      local d1 = date(false)
-      local nowtime = d1:fmt("%F %T")
-    
-      -- check deadline_time
-      local ten_min_later = date(nowtime):addminutes(10)
-      local deadline_time = ten_min_later:fmt("%F %T")
+      -- check deadline time
+      local ten_min_later = now:copy():addminutes(10)
+      local deadlinetime = ten_min_later
       
       if self.params.DeadlineTime ~= "" then
-        local d2 = date(self.params.DeadlineTime)
-        if d2 > d1 then
-          deadline_time = d2:fmt("%F %T")
+        local dIn = date(self.params.DeadlineTime)
+        if dIn > now then
+          deadlinetime = dIn
         end
       end
       
-      -- check mailto_level
-      local play_interval = self.params.PlayInterval
-      if not tonumber(play_interval) then
-        play_interval = "30"
+      -- check interval seconds
+      local intervalSeconds = tonumber(self.params.PlayInterval)
+      if not intervalSeconds then
+        intervalSeconds = 30
       end
       
-      --[[
-      local GameAnnouncement = require("models.GameAnnouncement")
-      
-      local obj = GameAnnouncement.create(deadline_time, play_interval, self.params.Content)
-      if obj and self.session.user then
-        return { redirect_to = self:url_for("admin_announcement") }
+      if self.session.user then
+          GameAnnouncement.create(deadlinetime, intervalSeconds, self.params.Content, now)
+          
+          return { redirect_to = self:url_for("admin_announcement") }
       else
-        --assert_error(false, "xxxx错误!")
-      end]]
+        --assert_error(false, "创建失败!")
+      end    
     end,
     -- on_error
     function(self)

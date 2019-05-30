@@ -28,7 +28,7 @@ collectgarbage()
 
 local function nextSeqId(seqName)
     local query = {_id = seqName}
-    local update = {
+    local options = {
         update = {
             ["$inc"] = {
                 seq = 1
@@ -36,7 +36,7 @@ local function nextSeqId(seqName)
         }
     }
     local collection = client:get_collection(dbName, "sequenceid_generator")
-    local r, err = collection:find_and_modify(query, update)
+    local r, err = collection:find_and_modify(query, options)
     local val = r and r:find("seq")
     return val, err
 end

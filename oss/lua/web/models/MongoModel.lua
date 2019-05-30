@@ -42,15 +42,10 @@ end
 
 -- a is lua date
 function _M.dateToTm(a)
-    -- return time_t(tm)
     local yy, mm, dd = a:getdate()
-    print("******** yy=" .. yy .. ", mm=" .. mm  .. ", dd=" .. dd)
     local h, m, s, t = a:gettime()
-    print("******** h=" .. h .. ", m=" .. m .. ", s=" .. s .. ", t=" .. t)
-    local tm = os_time({year=yy, month=mm, day=dd, hour=h, min=m, sec=s})
-    --return date.diff(d, date.epoch()):spanseconds()
-    print("******* tm=" .. tostring(tm))
-    return tm
+     -- return time_t(tm)    
+    return os_time({year=yy, month=mm, day=dd, hour=h, min=m, sec=s})
 end
 
 -- tm is time_t
@@ -138,7 +133,7 @@ end
 -- return: val, err
 function _M.nextSeqId(self, seqName)
     local query = {_id = seqName}
-    local update = {
+    local options = {
         update = {
             ["$inc"] = {
                 seq = 1
@@ -146,7 +141,7 @@ function _M.nextSeqId(self, seqName)
         }
     }
     local collection = self.conn:get_collection(self.dbName, "sequenceid_generator")
-    local r, err = collection:find_and_modify(query, update)
+    local r, err = collection:find_and_modify(query, options)
     local val = r and r:find("seq")
     return val, err
 end

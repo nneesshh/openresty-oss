@@ -148,7 +148,7 @@ db.getCollection("menus").insert(
             "_id" : ObjectId("5c9c6a35b552003650898880"), 
             "Code" : "GameAnnouncement", 
             "Icon" : "fa fa-link", 
-            "Name" : "GM喇叭", 
+            "Name" : "GM公告", 
             "ParentId" : "00000000-0000-0000-0000-000000000000", 
             "Remarks" : "", 
             "SeqNo" : NumberInt(5), 
