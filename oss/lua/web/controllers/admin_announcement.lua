@@ -23,8 +23,10 @@ return function(app)
     end,
     
     GET = function(self)
+      local now = date(false)
+
       local GameAnnouncement = require("models.GameAnnouncement")
-      local gameAnnouncementList = GameAnnouncement.getLatest()
+      local gameAnnouncementList = GameAnnouncement.getLatest(now)
       
       if #gameAnnouncementList > 0 then
         self.CurrentGameAnnouncement = gameAnnouncementList[1]

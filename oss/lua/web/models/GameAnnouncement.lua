@@ -20,8 +20,10 @@ function _M.create(deadlinetime, intervalSeconds, content, createtime)
       announcementid = announcementid,
       interval_seconds = intervalSeconds,
       content = content,
+      status = 0,
       createtime = model.dateToMongoDateTime(createtime),
       deadlinetime = model.dateToMongoDateTime(deadlinetime),
+      optime = createtime
     })
     h:release()
 end
@@ -34,12 +36,14 @@ function _M.get(announcementid)
     return model.getBsonVal(r)
 end
 
-function _M.getLatest()
+function _M.getLatest(now)
   local h = model:new(oss_options)
   local col = h:getCol(_M.colName)
   --
   local r = {}
-  local cursor = col:find({}, {sort = {announcementid = -1}, limit = 1})
+  local cursor = col:find(
+    { status = 0, deadlinetime = {['$gt'] = model.dateToMongoDateTime(now) }},
+    { sort = {announcementid = -1}, limit = 1 })
   for row in cursor:iterator() do
       local row_ = model.obidSafe(row)
       tbl_insert(r, row_)
