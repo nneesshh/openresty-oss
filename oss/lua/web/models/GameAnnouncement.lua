@@ -23,7 +23,7 @@ function _M.create(deadlinetime, intervalSeconds, content, createtime)
       status = 0,
       createtime = model.dateToMongoDateTime(createtime),
       deadlinetime = model.dateToMongoDateTime(deadlinetime),
-      optime = createtime
+      optime = model.dateToMongoDateTime(createtime),
     })
     h:release()
 end
